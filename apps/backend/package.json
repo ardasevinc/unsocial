@@ -14,5 +14,8 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "prettier": "@ardasevinc/prettier-config"
+  "prettier": "@ardasevinc/prettier-config",
+  "dependencies": {
+    "fastify": "^4.26.2"
+  }
 }
