@@ -22,7 +22,8 @@
   "license": "ISC",
   "prettier": "@ardasevinc/prettier-config",
   "dependencies": {
-    "fastify": "^4.26.2"
+    "fastify": "^4.26.2",
+    "rimraf": "^5.0.5"
   },
   "devDependencies": {
     "@types/node": "^20",
