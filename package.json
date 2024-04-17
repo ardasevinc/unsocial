@@ -15,5 +15,9 @@
   },
   "keywords": [],
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "devDependencies": {
+    "@ardasevinc/prettier-config": "^0.1.4"
+  },
+  "prettier": "@ardasevinc/prettier-config"
 }
