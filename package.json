@@ -1,0 +1,19 @@
+{
+  "name": "unsocial",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev:frontend": "pnpm --filter apps/frontend dev",
+    "dev:backend": "pnpm --filter apps/backend dev",
+    "dev": "pnpm run \"/^watch:.*/\"",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "engines": {
+    "node": ">=20",
+    "pnpm": ">=8"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
