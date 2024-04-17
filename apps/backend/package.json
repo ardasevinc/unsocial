@@ -17,5 +17,9 @@
   "prettier": "@ardasevinc/prettier-config",
   "dependencies": {
     "fastify": "^4.26.2"
+  },
+  "devDependencies": {
+    "@types/node": "^20",
+    "typescript": "^5"
   }
 }
