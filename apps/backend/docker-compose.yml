@@ -4,7 +4,7 @@ services:
     ports:
       - "6379:6379"
     volumes:
-      - "./data/redis:/data"
+      - "redis:/data"
       - "./config/redis.cong:/usr/local/etc/redis/redis.conf"
     command: redis-server /usr/local/etc/redis/redis.conf
 
@@ -14,9 +14,12 @@ services:
     ports:
       - "5432:5432"
     volumes:
-      - "./data/db:/var/lib/postgresql/data"
+      - "postgres:/var/lib/postgresql/data"
     environment:
       - POSTGRES_USER=${DB_USER}
       - POSTGRES_PASSWORD=${DB_PASS}
       - POSTGRES_DB=${DB_NAME}
 
+volumes:
+  redis:
+  postgres:
