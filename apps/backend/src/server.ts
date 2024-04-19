@@ -1,5 +1,5 @@
 import Fastify from 'fastify';
-import SimulationRoute from './routes/simulation.js';
+import SimulationRoute from './routes/simulation/index.js';
 const fastify = Fastify({
   logger: true,
 });
