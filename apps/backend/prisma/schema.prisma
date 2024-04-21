@@ -1,0 +1,70 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+  previewFeatures = ["postgresqlExtensions"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+  extensions = [citext]
+}
+
+model Simulation {
+  id  Int @id @default(autoincrement())
+  created DateTime @default(now())
+  updated DateTime @updatedAt
+  simulation_start DateTime
+  simulation_end DateTime
+  chaos Int
+  simulation_status SimulationStatus @default(CREATED)
+  events SimulationEvent[]
+  @@map("simulations")
+}
+
+enum SimulationStatus {
+  CREATED
+  RUNNING
+  PAUSED
+  FINISHED
+  @@map("simulation_status")
+}
+
+model SimulationEvent {
+  id  Int @id @default(autoincrement())
+  created DateTime @default(now())
+  updated DateTime @updatedAt
+  name String
+  type EventType
+  time DateTime
+  simulation_id Int
+  simulation Simulation @relation(fields: [simulation_id], references: [id])
+  @@map("simulation_events")
+}
+
+enum EventType {
+  POLITICAL
+  ECONOMIC
+  SOCIAL
+  TECHNOLOGICAL
+  ENVIRONMENTAL
+  ENTERTAINMENT
+  LEGAL
+  GLOBAL
+  @@map("event_type")
+}
+
+model Agent {
+  id Int @id @default(autoincrement())
+  created DateTime @default(now())
+  updated DateTime @updatedAt
+  display_name String @db.Citext
+  username String @db.Citext @unique
+  
+  @@map("agents")
+}
