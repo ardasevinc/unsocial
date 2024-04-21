@@ -42,8 +42,12 @@ model SimulationEvent {
   name String
   type EventType
   time DateTime
+  global_importance_score Int
+  local_importance_score Int
   simulation_id Int
   simulation Simulation @relation(fields: [simulation_id], references: [id])
+  location_id Int
+  location EventLocation @relation(fields: [location_id], references: [id])
   @@map("simulation_events")
 }
 
@@ -59,12 +63,40 @@ enum EventType {
   @@map("event_type")
 }
 
+model EventLocation {
+  id Int @id @default(autoincrement())
+  created DateTime @default(now())
+  updated DateTime @updatedAt
+  name String @db.Citext
+  country String
+  city String
+  latitude Float
+  longitude Float
+  events SimulationEvent[]
+  @@map("event_locations")
+}
+
 model Agent {
   id Int @id @default(autoincrement())
   created DateTime @default(now())
   updated DateTime @updatedAt
   display_name String @db.Citext
   username String @db.Citext @unique
-  
   @@map("agents")
+}
+
+model User {
+  id String @id
+  created DateTime @default(now())
+  updated DateTime @updatedAt
+  sessions Session[]
+  @@map("users")
+}
+
+model Session {
+  id String @id
+  userId String
+  expires_at DateTime
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  @@map("sessions")
 }
