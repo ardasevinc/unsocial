@@ -23,6 +23,7 @@
   "prettier": "@ardasevinc/prettier-config",
   "dependencies": {
     "@lucia-auth/adapter-prisma": "^4.0.1",
+    "@prisma/client": "5.12.1",
     "fastify": "^4.26.2",
     "lucia": "^3.1.1",
     "oslo": "^1.2.0",
