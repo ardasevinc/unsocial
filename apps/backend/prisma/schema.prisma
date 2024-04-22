@@ -29,6 +29,7 @@ model Simulation {
 
 enum SimulationStatus {
   CREATED
+  QUEUED
   RUNNING
   PAUSED
   FINISHED
