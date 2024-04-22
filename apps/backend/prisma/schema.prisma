@@ -19,10 +19,10 @@ model Simulation {
   id  Int @id @default(autoincrement())
   created DateTime @default(now())
   updated DateTime @updatedAt
-  simulation_start DateTime
-  simulation_end DateTime
+  simulationStart DateTime @map("simulation_start")
+  simulationEnd DateTime @map("simulation_end")
   chaos Int
-  simulation_status SimulationStatus @default(CREATED)
+  simulationStatus SimulationStatus @default(CREATED) @map("simulation_status")
   events SimulationEvent[]
   @@map("simulations")
 }
@@ -42,12 +42,12 @@ model SimulationEvent {
   name String
   type EventType
   time DateTime
-  global_importance_score Int
-  local_importance_score Int
-  simulation_id Int
-  simulation Simulation @relation(fields: [simulation_id], references: [id])
-  location_id Int
-  location EventLocation @relation(fields: [location_id], references: [id])
+  globalImportanceScore Int @map("global_importance_score")
+  localImportanceScore Int @map("local_importance_score")
+  simulationId Int @map("simulation_id")
+  simulation Simulation @relation(fields: [simulationId], references: [id])
+  locationId Int @map("location_id")
+  location EventLocation @relation(fields: [locationId], references: [id])
   @@map("simulation_events")
 }
 
@@ -80,11 +80,11 @@ model Agent {
   id Int @id @default(autoincrement())
   created DateTime @default(now())
   updated DateTime @updatedAt
-  display_name String @db.Citext
+  displayName String @db.Citext @map("display_name")
   username String @db.Citext @unique
   prompt String
-  engagement_probability Float
-  followed_by Agent[] @relation("AgentFollows")
+  engagementProbability Float @map("engagement_probability")
+  followedBy Agent[] @relation("AgentFollows")
   following Agent[] @relation("AgentFollows")
   posts Post[]
   replies Reply[]
@@ -99,10 +99,10 @@ model Post {
   content String
   comments Reply[]
   likes Like[]
-  is_repost Boolean
-  repost_count Int @default(0)
-  poster_id Int
-  poster Agent @relation(fields: [poster_id], references: [id])
+  isRepost Boolean @map("is_repost")
+  repostCount Int @default(0) @map("repost_count")
+  posterId Int @map("poster_id")
+  poster Agent @relation(fields: [posterId], references: [id])
   @@map("posts")
 }
 
@@ -112,11 +112,11 @@ model Reply {
   updated DateTime @updatedAt
   content String
   likes Like[]
-  repost_count Int
-  post_id BigInt
-  post Post @relation(fields: [post_id], references: [id])
-  author_id Int
-  author Agent @relation(fields: [author_id], references: [id])
+  repostCount Int @default(0) @map("repost_count")
+  postId BigInt @map("post_id")
+  post Post @relation(fields: [postId], references: [id])
+  authorId Int @map("author_id")
+  author Agent @relation(fields: [authorId], references: [id])
   @@map("replies")
 }
 
@@ -126,10 +126,10 @@ model Like {
   updated DateTime @updatedAt
   post_id BigInt
   post Post @relation(fields: [post_id], references: [id])
-  liker_id Int
-  liker Agent @relation(fields: [liker_id], references: [id])
-  to_reply_id BigInt
-  to_reply Reply @relation(fields: [to_reply_id], references: [id])
+  likerId Int @map("liker_id")
+  liker Agent @relation(fields: [likerId], references: [id])
+  toReplyId BigInt @map("to_reply_id")
+  to_reply Reply @relation(fields: [toReplyId], references: [id])
   @@map("likes")
 }
 
@@ -144,7 +144,7 @@ model User {
 model Session {
   id String @id
   userId String
-  expires_at DateTime
+  expiresAt DateTime @map("expires_at")
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
   @@map("sessions")
 }
