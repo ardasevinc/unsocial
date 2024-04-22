@@ -5,25 +5,26 @@
 // Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
 
 generator client {
-  provider = "prisma-client-js"
+  provider        = "prisma-client-js"
   previewFeatures = ["postgresqlExtensions"]
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider   = "postgresql"
+  url        = env("DATABASE_URL")
   extensions = [citext]
 }
 
 model Simulation {
-  id  Int @id @default(autoincrement())
-  created DateTime @default(now())
-  updated DateTime @updatedAt
-  simulationStart DateTime @map("simulation_start")
-  simulationEnd DateTime @map("simulation_end")
-  chaos Int
-  simulationStatus SimulationStatus @default(CREATED) @map("simulation_status")
-  events SimulationEvent[]
+  id               Int               @id @default(autoincrement())
+  created          DateTime          @default(now())
+  updated          DateTime          @updatedAt
+  simulationStart  DateTime          @map("simulation_start")
+  simulationEnd    DateTime          @map("simulation_end")
+  chaos            Int
+  simulationStatus SimulationStatus  @default(CREATED) @map("simulation_status")
+  events           SimulationEvent[]
+
   @@map("simulations")
 }
 
@@ -33,22 +34,24 @@ enum SimulationStatus {
   RUNNING
   PAUSED
   FINISHED
+
   @@map("simulation_status")
 }
 
 model SimulationEvent {
-  id  Int @id @default(autoincrement())
-  created DateTime @default(now())
-  updated DateTime @updatedAt
-  name String
-  type EventType
-  time DateTime
-  globalImportanceScore Int @map("global_importance_score")
-  localImportanceScore Int @map("local_importance_score")
-  simulationId Int @map("simulation_id")
-  simulation Simulation @relation(fields: [simulationId], references: [id])
-  locationId Int @map("location_id")
-  location EventLocation @relation(fields: [locationId], references: [id])
+  id                    Int           @id @default(autoincrement())
+  created               DateTime      @default(now())
+  updated               DateTime      @updatedAt
+  name                  String
+  type                  EventType
+  time                  DateTime
+  globalImportanceScore Int           @map("global_importance_score")
+  localImportanceScore  Int           @map("local_importance_score")
+  simulationId          Int           @map("simulation_id")
+  simulation            Simulation    @relation(fields: [simulationId], references: [id])
+  locationId            Int           @map("location_id")
+  location              EventLocation @relation(fields: [locationId], references: [id])
+
   @@map("simulation_events")
 }
 
@@ -61,99 +64,108 @@ enum EventType {
   ENTERTAINMENT
   LEGAL
   GLOBAL
+
   @@map("event_type")
 }
 
 model EventLocation {
-  id Int @id @default(autoincrement())
-  created DateTime @default(now())
-  updated DateTime @updatedAt
-  name String @db.Citext
-  isGlobal Boolean @map("is_global")
-  country String?
-  city String?
-  latitude Float?
+  id        Int               @id @default(autoincrement())
+  created   DateTime          @default(now())
+  updated   DateTime          @updatedAt
+  name      String            @db.Citext
+  isGlobal  Boolean           @map("is_global")
+  country   String?
+  city      String?
+  latitude  Float?
   longitude Float?
-  events SimulationEvent[]
+  events    SimulationEvent[]
+
   @@map("event_locations")
 }
 
 model Agent {
-  id Int @id @default(autoincrement())
-  created DateTime @default(now())
-  updated DateTime @updatedAt
-  type AgentType
-  displayName String @db.Citext @map("display_name")
-  username String @db.Citext @unique
-  prompt String?
-  engagementProbability Float @map("engagement_probability")
-  followedBy Agent[] @relation("AgentFollows")
-  following Agent[] @relation("AgentFollows")
-  posts Post[]
-  replies Reply[]
-  likes Like[]
+  id                    Int       @id @default(autoincrement())
+  created               DateTime  @default(now())
+  updated               DateTime  @updatedAt
+  type                  AgentType
+  displayName           String    @map("display_name") @db.Citext
+  username              String    @unique @db.Citext
+  prompt                String?
+  engagementProbability Float     @map("engagement_probability")
+  followedBy            Agent[]   @relation("AgentFollows")
+  following             Agent[]   @relation("AgentFollows")
+  posts                 Post[]
+  replies               Reply[]
+  likes                 Like[]
+
   @@map("agents")
 }
 
 enum AgentType {
   AI
   HUMAN
+
   @@map("agent_type")
 }
 
 model Post {
-  id BigInt @id @default(autoincrement())
-  created DateTime @default(now())
-  updated DateTime @updatedAt
-  content String
-  comments Reply[]
-  likes Like[]
-  isRepost Boolean @map("is_repost")
-  repostCount Int @default(0) @map("repost_count")
-  ownerId Int @map("owner_id")
-  owner Agent @relation(fields: [ownerId], references: [id])
+  id          BigInt   @id @default(autoincrement())
+  created     DateTime @default(now())
+  updated     DateTime @updatedAt
+  content     String
+  comments    Reply[]
+  likes       Like[]
+  isRepost    Boolean  @map("is_repost")
+  repostCount Int      @default(0) @map("repost_count")
+  ownerId     Int      @map("owner_id")
+  owner       Agent    @relation(fields: [ownerId], references: [id])
+
   @@map("posts")
 }
 
 model Reply {
-  id BigInt @id @default(autoincrement())
-  created DateTime @default(now())
-  updated DateTime @updatedAt
-  content String
-  likes Like[]
-  repostCount Int @default(0) @map("repost_count")
-  postId BigInt @map("post_id")
-  post Post @relation(fields: [postId], references: [id])
-  authorId Int @map("author_id")
-  author Agent @relation(fields: [authorId], references: [id])
+  id          BigInt   @id @default(autoincrement())
+  created     DateTime @default(now())
+  updated     DateTime @updatedAt
+  content     String
+  likes       Like[]
+  repostCount Int      @default(0) @map("repost_count")
+  postId      BigInt   @map("post_id")
+  post        Post     @relation(fields: [postId], references: [id])
+  authorId    Int      @map("author_id")
+  author      Agent    @relation(fields: [authorId], references: [id])
+
   @@map("replies")
 }
 
 model Like {
-  id BigInt @id @default(autoincrement())
+  id      BigInt   @id @default(autoincrement())
   created DateTime @default(now())
   updated DateTime @updatedAt
   post_id BigInt
-  post Post @relation(fields: [post_id], references: [id])
-  agentId Int @map("agent_id")
-  agent Agent @relation(fields: [agentId], references: [id])
-  replyId BigInt @map("reply_id")
-  reply Reply @relation(fields: [replyId], references: [id])
+  post    Post     @relation(fields: [post_id], references: [id])
+  agentId Int      @map("agent_id")
+  agent   Agent    @relation(fields: [agentId], references: [id])
+  replyId BigInt   @map("reply_id")
+  reply   Reply    @relation(fields: [replyId], references: [id])
+
   @@map("likes")
 }
 
 model HumanAccount {
-  id String @id
-  created DateTime @default(now())
-  updated DateTime @updatedAt
+  id       String    @id
+  created  DateTime  @default(now())
+  updated  DateTime  @updatedAt
   sessions Session[]
+
   @@map("human_accounts")
 }
 
 model Session {
-  id String @id
+  id        String       @id
   accountId String
-  expiresAt DateTime @map("expires_at")
-  account HumanAccount @relation(fields: [accountId], references: [id], onDelete: Cascade)
+  expiresAt DateTime     @map("expires_at")
+  account   HumanAccount @relation(fields: [accountId], references: [id], onDelete: Cascade)
+
   @@map("sessions")
 }
