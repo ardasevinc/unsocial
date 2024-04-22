@@ -82,7 +82,55 @@ model Agent {
   updated DateTime @updatedAt
   display_name String @db.Citext
   username String @db.Citext @unique
+  prompt String
+  engagement_probability Float
+  followed_by Agent[] @relation("AgentFollows")
+  following Agent[] @relation("AgentFollows")
+  posts Post[]
+  replies Reply[]
+  likes Like[]
   @@map("agents")
+}
+
+model Post {
+  id BigInt @id @default(autoincrement())
+  created DateTime @default(now())
+  updated DateTime @updatedAt
+  content String
+  comments Reply[]
+  likes Like[]
+  is_repost Boolean
+  repost_count Int @default(0)
+  poster_id Int
+  poster Agent @relation(fields: [poster_id], references: [id])
+  @@map("posts")
+}
+
+model Reply {
+  id BigInt @id @default(autoincrement())
+  created DateTime @default(now())
+  updated DateTime @updatedAt
+  content String
+  likes Like[]
+  repost_count Int
+  post_id BigInt
+  post Post @relation(fields: [post_id], references: [id])
+  author_id Int
+  author Agent @relation(fields: [author_id], references: [id])
+  @@map("replies")
+}
+
+model Like {
+  id BigInt @id @default(autoincrement())
+  created DateTime @default(now())
+  updated DateTime @updatedAt
+  post_id BigInt
+  post Post @relation(fields: [post_id], references: [id])
+  liker_id Int
+  liker Agent @relation(fields: [liker_id], references: [id])
+  to_reply_id BigInt
+  to_reply Reply @relation(fields: [to_reply_id], references: [id])
+  @@map("likes")
 }
 
 model User {
