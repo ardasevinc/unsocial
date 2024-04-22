@@ -69,10 +69,11 @@ model EventLocation {
   created DateTime @default(now())
   updated DateTime @updatedAt
   name String @db.Citext
-  country String
-  city String
-  latitude Float
-  longitude Float
+  isGlobal Boolean @map("is_global")
+  country String?
+  city String?
+  latitude Float?
+  longitude Float?
   events SimulationEvent[]
   @@map("event_locations")
 }
@@ -84,7 +85,7 @@ model Agent {
   type AgentType
   displayName String @db.Citext @map("display_name")
   username String @db.Citext @unique
-  prompt String
+  prompt String?
   engagementProbability Float @map("engagement_probability")
   followedBy Agent[] @relation("AgentFollows")
   following Agent[] @relation("AgentFollows")
