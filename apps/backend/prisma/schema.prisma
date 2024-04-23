@@ -74,8 +74,8 @@ model Location {
   created DateTime          @default(now())
   updated DateTime          @updatedAt
   name    String            @db.Citext
-  country String?
-  city    String?
+  country String?           @db.Citext
+  city    String?           @db.Citext
   events  SimulationEvent[]
   agents  Agent[]
 
