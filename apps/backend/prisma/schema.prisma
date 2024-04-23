@@ -97,7 +97,8 @@ model Agent {
   posts                 Post[]
   replies               Reply[]
   likes                 Like[]
-
+  account               HumanAccount?
+  
   @@map("agents")
 }
 
@@ -157,7 +158,8 @@ model HumanAccount {
   created  DateTime  @default(now())
   updated  DateTime  @updatedAt
   sessions Session[]
-
+  agentId  Int @unique @map("agent_id")
+  agent    Agent @relation(fields: [agentId], references: [id])
   @@map("human_accounts")
 }
 
