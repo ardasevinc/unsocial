@@ -90,6 +90,7 @@ model Agent {
   type                  AgentType
   displayName           String        @map("display_name") @db.Citext
   username              String        @unique @db.Citext
+  timezone              String
   prompt                String?
   engagementProbability Float?        @map("engagement_probability")
   followedBy            Agent[]       @relation("AgentFollows")
