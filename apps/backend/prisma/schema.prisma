@@ -21,6 +21,7 @@ model Simulation {
   updated          DateTime          @updatedAt
   simulationStart  DateTime          @map("simulation_start")
   simulationEnd    DateTime          @map("simulation_end")
+  currentTime      DateTime          @map("current_time")
   chaos            Int
   simulationStatus SimulationStatus  @default(CREATED) @map("simulation_status")
   events           SimulationEvent[]
