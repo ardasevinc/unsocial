@@ -49,7 +49,7 @@ model SimulationEvent {
   globalImportanceScore Int        @map("global_importance_score")
   localImportanceScore  Int        @map("local_importance_score")
   simulationId          Int        @map("simulation_id")
-  simulation            Simulation @relation(fields: [simulationId], references: [id])
+  simulation            Simulation @relation(fields: [simulationId], references: [id], onDelete: Cascade)
   isGlobal              Boolean
   locationId            Int?       @map("location_id")
   location              Location?  @relation(fields: [locationId], references: [id])
@@ -122,7 +122,7 @@ model Post {
   isRepost    Boolean  @map("is_repost")
   repostCount Int      @default(0) @map("repost_count")
   ownerId     Int      @map("owner_id")
-  owner       Agent    @relation(fields: [ownerId], references: [id])
+  owner       Agent    @relation(fields: [ownerId], references: [id], onDelete: Cascade)
 
   @@map("posts")
 }
@@ -135,9 +135,9 @@ model Reply {
   likes       Like[]
   repostCount Int      @default(0) @map("repost_count")
   postId      BigInt   @map("post_id")
-  post        Post     @relation(fields: [postId], references: [id])
+  post        Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
   authorId    Int      @map("author_id")
-  author      Agent    @relation(fields: [authorId], references: [id])
+  author      Agent    @relation(fields: [authorId], references: [id], onDelete: Cascade)
 
   @@map("replies")
 }
@@ -147,11 +147,11 @@ model Like {
   created DateTime @default(now())
   updated DateTime @updatedAt
   post_id BigInt
-  post    Post     @relation(fields: [post_id], references: [id])
+  post    Post     @relation(fields: [post_id], references: [id], onDelete: Cascade)
   agentId Int      @map("agent_id")
-  agent   Agent    @relation(fields: [agentId], references: [id])
+  agent   Agent    @relation(fields: [agentId], references: [id], onDelete: Cascade)
   replyId BigInt   @map("reply_id")
-  reply   Reply    @relation(fields: [replyId], references: [id])
+  reply   Reply    @relation(fields: [replyId], references: [id], onDelete: Cascade)
 
   @@map("likes")
 }
