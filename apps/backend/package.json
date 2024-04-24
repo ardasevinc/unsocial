@@ -22,6 +22,7 @@
   "license": "ISC",
   "prettier": "@ardasevinc/prettier-config",
   "dependencies": {
+    "@fastify/env": "^4.3.0",
     "@lucia-auth/adapter-prisma": "^4.0.1",
     "@prisma/client": "5.12.1",
     "fastify": "^4.26.2",
