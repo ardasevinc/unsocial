@@ -1,0 +1,17 @@
+{
+  "type": "object",
+  "required": ["PORT", "OPENAI_API_KEY", "ANTHROPIC_API_KEY"],
+  "properties": {
+    "PORT": {
+      "type": "number",
+      "default": "3006"
+    },
+    "OPENAI_API_KEY": {
+      "type": "string"
+    },
+    "ANTHROPIC_API_KEY": {
+      "type": "string"
+    }
+  },
+  "additionalProperties": false
+}
