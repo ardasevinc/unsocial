@@ -1,5 +1,8 @@
 import Fastify from 'fastify';
-import { TypeBoxTypeProvider } from '@fastify/type-provider-typebox';
+import {
+  TypeBoxTypeProvider,
+  TypeBoxValidatorCompiler,
+} from '@fastify/type-provider-typebox';
 import { fastifyEnv, type FastifyEnvOptions } from '@fastify/env';
 import prismaPlugin from '@/lib/plugins/prisma.js';
 import { type Env, EnvSchema } from '@/lib/types.js';
@@ -7,7 +10,9 @@ import SimulationRoute from '@/routes/simulation/index.js';
 
 const fastify = Fastify({
   logger: true,
-}).withTypeProvider<TypeBoxTypeProvider>();
+})
+  .withTypeProvider<TypeBoxTypeProvider>()
+  .setValidatorCompiler(TypeBoxValidatorCompiler);
 
 declare module 'fastify' {
   interface FastifyInstance {
