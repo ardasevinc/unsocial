@@ -23,8 +23,10 @@
   "prettier": "@ardasevinc/prettier-config",
   "dependencies": {
     "@fastify/env": "^4.3.0",
+    "@fastify/type-provider-typebox": "^4.0.0",
     "@lucia-auth/adapter-prisma": "^4.0.1",
     "@prisma/client": "5.12.1",
+    "@sinclair/typebox": "^0.32.24",
     "dotenv": "^16.4.5",
     "env-schema": "^5.2.1",
     "fastify": "^4.26.2",
