@@ -9,6 +9,14 @@ generator client {
   previewFeatures = ["postgresqlExtensions"]
 }
 
+generator prismabox {
+  provider = "prismabox"
+  // you can optionally specify the output location. Defaults to ./prismabox
+  output = "./src/lib/types"
+  // optionally enable the data model generation. See the data model section below for more info
+  dataModel = true
+}
+
 datasource db {
   provider   = "postgresql"
   url        = env("DATABASE_URL")
