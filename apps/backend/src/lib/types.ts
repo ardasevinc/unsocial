@@ -1,6 +1,6 @@
 import { Static, Type } from '@sinclair/typebox';
 
-const EnvSchema = Type.Object(
+const TEnv = Type.Object(
   {
     PORT: Type.Number({ default: 3006 }),
     OPENAI_API_KEY: Type.String(),
@@ -9,6 +9,6 @@ const EnvSchema = Type.Object(
   { additionalProperties: false },
 );
 
-type Env = Static<typeof EnvSchema>;
+type Env = Static<typeof TEnv>;
 
-export { EnvSchema, Env };
+export { TEnv, Env };

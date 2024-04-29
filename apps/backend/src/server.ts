@@ -5,7 +5,7 @@ import {
 } from '@fastify/type-provider-typebox';
 import { fastifyEnv, type FastifyEnvOptions } from '@fastify/env';
 import prismaPlugin from '@/lib/plugins/prisma.js';
-import { type Env, EnvSchema } from '@/lib/types.js';
+import { type Env, TEnv } from '@/lib/types.js';
 import SimulationRoute from '@/routes/simulation/index.js';
 
 const fastify = Fastify({
@@ -21,7 +21,7 @@ declare module 'fastify' {
 }
 
 const fastifyEnvOptions = {
-  schema: EnvSchema,
+  schema: TEnv,
   dotenv: true,
   confKey: 'env',
 } satisfies FastifyEnvOptions;
