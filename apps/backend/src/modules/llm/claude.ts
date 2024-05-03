@@ -40,6 +40,10 @@ const TClaudeGenerationParameters = Type.Object({
   maxTokens: Type.Readonly(Type.Integer({ minimum: 1, maximum: 4096 })),
   stream: Type.ReadonlyOptional(Type.Boolean({ default: false })),
   messages: TClaudeMessages,
+  metadata: Type.ReadonlyOptional(Type.Object({ user_id: Type.String() })),
+  stopSequences: Type.ReadonlyOptional(Type.Array(Type.String())),
+  topK: Type.ReadonlyOptional(Type.Integer()),
+  topP: Type.ReadonlyOptional(Type.Number()),
 });
 
 enum StopReason {
