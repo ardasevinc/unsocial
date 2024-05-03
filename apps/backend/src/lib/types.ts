@@ -1,4 +1,4 @@
-import { Static, Type } from '@sinclair/typebox';
+import { type Static, type TSchema, Type } from '@sinclair/typebox';
 
 const TEnv = Type.Object(
   {
@@ -11,4 +11,7 @@ const TEnv = Type.Object(
 
 type Env = Static<typeof TEnv>;
 
-export { TEnv, Env };
+const Nullable = <T extends TSchema>(schema: T) =>
+  Type.Union([schema, Type.Null()]);
+
+export { TEnv, Env, Nullable };
