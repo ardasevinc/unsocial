@@ -44,7 +44,27 @@ const TClaudeGenerationParameters = Type.Object({
   stopSequences: Type.ReadonlyOptional(Type.Array(Type.String())),
   topK: Type.ReadonlyOptional(Type.Integer()),
   topP: Type.ReadonlyOptional(Type.Number()),
+  tools: Type.ReadonlyOptional(
+    Type.Array(
+      Type.Object({
+        name: Type.String(),
+        description: Type.Optional(
+          Type.String({
+            description:
+              "optional, but recommended description for what the tool does and doesn't",
+          }),
+        ),
+        input_schema: Type.Any({
+          description: 'valid JSON Schema for the tool',
+        }),
+      }),
+    ),
+  ),
 });
+
+const TClaudeApiBodyParameters = Type.Omit(TClaudeGenerationParameters, [
+  'apiKey',
+]);
 
 enum StopReason {
   END_TURN = 'end_turn',
