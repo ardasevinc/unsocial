@@ -1,4 +1,4 @@
-import { Type, Static } from '@sinclair/typebox';
+import { Type, type Static } from '@sinclair/typebox';
 
 const TClaudeMessages = Type.Array(
   Type.Object({
