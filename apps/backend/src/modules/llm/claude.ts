@@ -1,4 +1,5 @@
-import { Type, type Static } from '@sinclair/typebox';
+import { Type, type Static, type TSchema } from '@sinclair/typebox';
+import { Nullable } from '@/lib/types.js';
 
 const TClaudeMessages = Type.Array(
   Type.Object({
@@ -32,39 +33,37 @@ enum ClaudeModels {
   HAIKU = 'claude-3-haiku-20240307',
 }
 
-const TClaudeGenerationParameters = Type.Object({
-  model: Type.Readonly(Type.Enum(ClaudeModels)),
-  apiKey: Type.Readonly(Type.String()),
-  systemPrompt: Type.Readonly(Type.String()),
-  temperature: Type.Readonly(Type.Number({ minimum: 0, maximum: 1.0 })),
-  maxTokens: Type.Readonly(Type.Integer({ minimum: 1, maximum: 4096 })),
-  stream: Type.ReadonlyOptional(Type.Boolean({ default: false })),
-  messages: TClaudeMessages,
-  metadata: Type.ReadonlyOptional(Type.Object({ user_id: Type.String() })),
-  stopSequences: Type.ReadonlyOptional(Type.Array(Type.String())),
-  topK: Type.ReadonlyOptional(Type.Integer()),
-  topP: Type.ReadonlyOptional(Type.Number()),
-  tools: Type.ReadonlyOptional(
-    Type.Array(
-      Type.Object({
-        name: Type.String(),
-        description: Type.Optional(
-          Type.String({
-            description:
-              "optional, but recommended description for what the tool does and doesn't",
-          }),
-        ),
-        input_schema: Type.Any({
-          description: 'valid JSON Schema for the tool',
+const TClaudeGenerationParameters = <T extends TSchema>(schema: T) =>
+  Type.Object({
+    model: Type.Readonly(Type.Enum(ClaudeModels)),
+    apiKey: Type.Readonly(Type.String()),
+    systemPrompt: Type.Readonly(Type.String()),
+    temperature: Type.Readonly(Type.Number({ minimum: 0, maximum: 1.0 })),
+    maxTokens: Type.Readonly(Type.Integer({ minimum: 1, maximum: 4096 })),
+    stream: Type.ReadonlyOptional(Type.Boolean({ default: false })),
+    messages: TClaudeMessages,
+    metadata: Type.ReadonlyOptional(Type.Object({ user_id: Type.String() })),
+    stopSequences: Type.ReadonlyOptional(Type.Array(Type.String())),
+    topK: Type.ReadonlyOptional(Type.Integer()),
+    topP: Type.ReadonlyOptional(Type.Number()),
+    tools: Type.ReadonlyOptional(
+      Type.Array(
+        Type.Object({
+          name: Type.String(),
+          description: Type.Optional(
+            Type.String({
+              description:
+                "optional, but recommended description for what the tool does and doesn't",
+            }),
+          ),
+          input_schema: schema,
         }),
-      }),
+      ),
     ),
-  ),
-});
+  });
 
-const TClaudeApiBodyParameters = Type.Omit(TClaudeGenerationParameters, [
-  'apiKey',
-]);
+const TClaudeApiBodyParameters = <T extends TSchema>(schema: T) =>
+  Type.Omit(TClaudeGenerationParameters(schema), ['apiKey']);
 
 enum StopReason {
   END_TURN = 'end_turn',
@@ -80,8 +79,8 @@ const TClaudeResponse = Type.Readonly(
     role: Type.Literal('assistant'),
     content: TClaudeMessages,
     model: Type.Enum(ClaudeModels),
-    stop_reason: Type.Union([Type.Enum(StopReason)], Type.Null()),
-    stop_sequence: Type.Union([Type.String(), Type.Null()]),
+    stop_reason: Nullable(Type.Enum(StopReason)),
+    stop_sequence: Nullable(Type.String()),
     usage: Type.Object({
       input_tokens: Type.Integer(),
       output_tokens: Type.Integer(),
