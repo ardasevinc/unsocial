@@ -39,3 +39,5 @@ const app = async () => {
   }
 };
 app();
+
+export { fastify };

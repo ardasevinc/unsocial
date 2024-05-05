@@ -11,7 +11,7 @@ abstract class LLMProvider<Models, GenerationParameters> {
 
   constructor(protected readonly config: LLMProviderConfig) {}
 
-  abstract generate(params: GenerationParameters): Promise<string>;
+  abstract generate(params: GenerationParameters): Promise<string | boolean>;
 }
 
 export { LLMProvider, type LLMProviderConfig };

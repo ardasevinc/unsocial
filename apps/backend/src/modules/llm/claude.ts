@@ -1,6 +1,8 @@
 import { Type, type Static } from '@sinclair/typebox';
 import { Nullable } from '@/lib/types.js';
 import { LLMProvider, LLMProviderConfig } from './base-provider.js';
+import { Check } from '@sinclair/typebox/value';
+import { fastify } from '@/server.js';
 
 const TClaudeMessages = Type.Array(
   Type.Object({
@@ -108,7 +110,7 @@ enum ClaudeApiErrors {
   RATE_LIMIT_ERROR = 'rate_limit_error',
 }
 
-const TClaudeErrorRespone = Type.Readonly(
+const TClaudeErrorResponse = Type.Readonly(
   Type.Object({
     type: Type.Literal('error'),
     error: Type.Object({
@@ -173,7 +175,28 @@ class Anthropic extends LLMProvider<
       headers,
       body: JSON.stringify(body),
     });
-    const completion = (await response.json()) as any;
-    return completion[0].text;
+
+    const responseData = await response.json();
+
+    if (!response.ok) {
+      const isClaudeErrorResponse = Check(TClaudeErrorResponse, responseData);
+      if (isClaudeErrorResponse) {
+        const { error } = responseData;
+        fastify.log.error(error, `Claude: ${error.type}`);
+      } else {
+        fastify.log.error(
+          { status: { code: response.status, text: response.statusText } },
+          'Claude: Unknown API error received',
+        );
+      }
+      return false;
+    } else if (Check(TClaudeResponse, responseData)) {
+      return responseData.content[0].content;
+    } else {
+      fastify.log.warn({
+        status: { code: response.status, text: response.statusText },
+      }, "Claude: Response validation failed");
+      return false;
+    }
   }
 }
