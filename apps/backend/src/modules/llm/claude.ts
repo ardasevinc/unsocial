@@ -1,5 +1,6 @@
-import { Type, type Static, type TSchema } from '@sinclair/typebox';
+import { Type, type Static } from '@sinclair/typebox';
 import { Nullable } from '@/lib/types.js';
+import { LLMProvider, LLMProviderConfig } from './base-provider.js';
 
 const TClaudeMessages = Type.Array(
   Type.Object({
@@ -33,37 +34,36 @@ enum ClaudeModels {
   HAIKU = 'claude-3-haiku-20240307',
 }
 
-const TClaudeGenerationParameters = <T extends TSchema>(schema: T) =>
-  Type.Object({
-    model: Type.Readonly(Type.Enum(ClaudeModels)),
-    apiKey: Type.Readonly(Type.String()),
-    systemPrompt: Type.Readonly(Type.String()),
-    temperature: Type.Readonly(Type.Number({ minimum: 0, maximum: 1.0 })),
-    maxTokens: Type.Readonly(Type.Integer({ minimum: 1, maximum: 4096 })),
-    stream: Type.ReadonlyOptional(Type.Boolean({ default: false })),
-    messages: TClaudeMessages,
-    metadata: Type.ReadonlyOptional(Type.Object({ user_id: Type.String() })),
-    stopSequences: Type.ReadonlyOptional(Type.Array(Type.String())),
-    topK: Type.ReadonlyOptional(Type.Integer()),
-    topP: Type.ReadonlyOptional(Type.Number()),
-    tools: Type.ReadonlyOptional(
-      Type.Array(
-        Type.Object({
-          name: Type.String(),
-          description: Type.Optional(
-            Type.String({
-              description:
-                "optional, but recommended description for what the tool does and doesn't",
-            }),
-          ),
-          input_schema: schema,
-        }),
-      ),
-    ),
-  });
+const TClaudeTool = Type.Object({
+  name: Type.String(),
+  description: Type.Optional(
+    Type.String({
+      description:
+        "optional, but recommended description for what the tool does and doesn't",
+    }),
+  ),
+  input_schema: Type.Any(),
+});
 
-const TClaudeApiBodyParameters = <T extends TSchema>(schema: T) =>
-  Type.Omit(TClaudeGenerationParameters(schema), ['apiKey']);
+type ClaudeTool = Static<typeof TClaudeTool>;
+
+const TClaudeGenerationParameters = Type.Object({
+  model: Type.Readonly(Type.Enum(ClaudeModels)),
+  systemPrompt: Type.Readonly(Type.String()),
+  temperature: Type.Readonly(Type.Number({ minimum: 0, maximum: 1.0 })),
+  maxTokens: Type.Readonly(Type.Integer({ minimum: 1, maximum: 4096 })),
+  stream: Type.ReadonlyOptional(Type.Boolean({ default: false })),
+  messages: TClaudeMessages,
+  metadata: Type.ReadonlyOptional(Type.Object({ user_id: Type.String() })),
+  stopSequences: Type.ReadonlyOptional(Type.Array(Type.String())),
+  topK: Type.ReadonlyOptional(Type.Integer()),
+  topP: Type.ReadonlyOptional(Type.Number()),
+});
+
+const TClaudeApiBodyParameters = Type.Composite([
+  TClaudeGenerationParameters,
+  Type.Object({ tools: Type.Optional(TClaudeTool) }),
+]);
 
 enum StopReason {
   END_TURN = 'end_turn',
@@ -77,7 +77,17 @@ const TClaudeResponse = Type.Readonly(
     id: Type.String(),
     type: Type.Literal('message'),
     role: Type.Literal('assistant'),
-    content: TClaudeMessages,
+    content: Type.Readonly(
+      Type.Array(
+        Type.Object({
+          type: Type.String({
+            description:
+              'the only value possible right now is `text` but kept as generic string for future compatibility as to not break the validation if this changes',
+          }),
+          content: Type.String(),
+        }),
+      ),
+    ),
     model: Type.Enum(ClaudeModels),
     stop_reason: Nullable(Type.Enum(StopReason)),
     stop_sequence: Nullable(Type.String()),
@@ -108,36 +118,62 @@ const TClaudeErrorRespone = Type.Readonly(
   }),
 );
 
-const generate = async ({
-  model,
-  apiKey,
-  systemPrompt,
-  temperature,
-  maxTokens,
-  stream = false,
-  messages,
-}: Static<typeof TClaudeGenerationParameters>) => {
-  const endpoint = new URL('https://api.anthropic.com/v1/messages');
-  const headers = new Headers();
-  headers.set('x-api-key', apiKey);
-  headers.set('Content-Type', 'application/json');
-  headers.set('anthropic-version', '2023-06-01');
+class Anthropic extends LLMProvider<
+  typeof ClaudeModels,
+  Static<typeof TClaudeGenerationParameters>
+> {
+  readonly models = ClaudeModels;
+  private _tools: Map<string, ClaudeTool> = new Map();
 
-  const body = {
+  get tools() {
+    return this._tools;
+  }
+
+  set tools(value) {
+    this._tools = value;
+  }
+
+  constructor({ apiKey, endpoint }: LLMProviderConfig) {
+    super({ apiKey, endpoint });
+  }
+
+  async generate({
     model,
+    systemPrompt,
+    temperature,
+    maxTokens,
+    stream,
     messages,
-    temperature: temperature,
-    max_tokens: maxTokens,
-    stream: stream,
-    system: systemPrompt,
-  };
+    metadata,
+    stopSequences,
+    topK,
+    topP,
+  }: Static<typeof TClaudeGenerationParameters>) {
+    const endpoint = new URL(this.config.endpoint);
+    const headers = new Headers();
+    headers.set('x-api-key', this.config.apiKey);
+    headers.set('Content-Type', 'application/json');
+    headers.set('anthropic-version', '2023-06-01');
 
-  const response = await fetch(endpoint, {
-    headers,
-    body: JSON.stringify(body),
-  });
-  const completion = (await response.json()) as any;
-  return completion[0].text;
-};
+    const body = {
+      model,
+      messages,
+      temperature: temperature,
+      max_tokens: maxTokens,
+      stream: stream,
+      system: systemPrompt,
+      metadata,
+      stop_sequences: stopSequences,
+      top_k: topK,
+      top_p: topP,
+      tools: this.tools,
+    };
 
-export { generate };
+    const response = await fetch(endpoint, {
+      headers,
+      body: JSON.stringify(body),
+    });
+    const completion = (await response.json()) as any;
+    return completion[0].text;
+  }
+}
