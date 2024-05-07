@@ -2,7 +2,6 @@ import { Type, type Static } from '@sinclair/typebox';
 import { Nullable } from '@/lib/types.js';
 import { LLMProvider, LLMProviderConfig } from './base-provider.js';
 import { Check } from '@sinclair/typebox/value';
-import { fastify } from '@/server.js';
 
 const TClaudeMessages = Type.Array(
   Type.Object({
@@ -100,7 +99,9 @@ const TClaudeResponse = Type.Readonly(
   }),
 );
 
-enum ClaudeApiErrors {
+type ClaudeResponse = Static<typeof TClaudeResponse>;
+
+enum ClaudeApiError {
   API_ERROR = 'api_error',
   AUTHENTICATION_ERROR = 'authentication_error',
   INVALID_REQUEST_ERROR = 'invalid_request_error',
@@ -110,15 +111,38 @@ enum ClaudeApiErrors {
   RATE_LIMIT_ERROR = 'rate_limit_error',
 }
 
+enum ClaudeGenericError {
+  RESPONSE_VALIDATION_ERROR = 'response_validation_error',
+  ERROR_RESPONSE_VALIDATION_ERROR = 'error_response_validation_error',
+}
+
 const TClaudeErrorResponse = Type.Readonly(
   Type.Object({
     type: Type.Literal('error'),
     error: Type.Object({
-      type: Type.Enum(ClaudeApiErrors),
+      type: Type.Enum(ClaudeApiError),
       message: Type.Optional(Type.String()),
     }),
   }),
 );
+
+type GenerateReturnParameters = {
+  completion: Static<typeof TClaudeResponse>;
+};
+
+class ClaudeError extends Error {
+  readonly type;
+  constructor(type: ClaudeApiError | ClaudeGenericError, ...params: string[]) {
+    super(...params);
+
+    if (Error.captureStackTrace) {
+      Error.captureStackTrace(this, ClaudeError);
+    }
+
+    this.name = 'ClaudeError';
+    this.type = type;
+  }
+}
 
 class Anthropic extends LLMProvider<
   typeof ClaudeModels,
@@ -182,27 +206,22 @@ class Anthropic extends LLMProvider<
       const isClaudeErrorResponse = Check(TClaudeErrorResponse, responseData);
       if (isClaudeErrorResponse) {
         const { error } = responseData;
-        fastify.log.error(error, `Claude: ${error.type}`);
+        throw new ClaudeError(error.type);
       } else {
-        fastify.log.error(
-          { status: { code: response.status, text: response.statusText } },
-          'Claude: Unknown API error received',
+        throw new ClaudeError(
+          ClaudeGenericError.ERROR_RESPONSE_VALIDATION_ERROR,
+          `Error Response Validation Failed. statusCode: ${response.status}, statusText: ${response.statusText}`,
         );
       }
-      return false;
     } else if (Check(TClaudeResponse, responseData)) {
-      return responseData.content[0].text;
+      return responseData;
     } else {
-      fastify.log.warn(
-        {
-          status: { code: response.status, text: response.statusText },
-          response: responseData,
-        },
-        'Claude: Response validation failed',
+      throw new ClaudeError(
+        ClaudeGenericError.RESPONSE_VALIDATION_ERROR,
+        `Response Validation Failed statusCode: ${response.status}, statusText: ${response.statusText}`,
       );
-      return false;
     }
   }
 }
 
-export { Anthropic };
+export { Anthropic, type ClaudeResponse };
