@@ -29,7 +29,7 @@ const TClaudeMessages = Type.Array(
   }),
 );
 
-enum ClaudeModels {
+enum ClaudeModel {
   OPUS = 'claude-3-opus-20240229',
   SONNET = 'claude-3-sonnet-20240229',
   HAIKU = 'claude-3-haiku-20240307',
@@ -49,7 +49,7 @@ const TClaudeTool = Type.Object({
 type ClaudeTool = Static<typeof TClaudeTool>;
 
 const TClaudeGenerationParameters = Type.Object({
-  model: Type.Readonly(Type.Enum(ClaudeModels)),
+  model: Type.Readonly(Type.Enum(ClaudeModel)),
   systemPrompt: Type.Readonly(Type.String()),
   temperature: Type.Readonly(Type.Number({ minimum: 0, maximum: 1.0 })),
   maxTokens: Type.Readonly(Type.Integer({ minimum: 1, maximum: 4096 })),
@@ -89,7 +89,7 @@ const TClaudeResponse = Type.Readonly(
         }),
       ),
     ),
-    model: Type.Enum(ClaudeModels),
+    model: Type.Enum(ClaudeModel),
     stop_reason: Nullable(Type.Enum(StopReason)),
     stop_sequence: Nullable(Type.String()),
     usage: Type.Object({
@@ -145,10 +145,10 @@ class ClaudeError extends Error {
 }
 
 class Anthropic extends LLMProvider<
-  typeof ClaudeModels,
+  typeof ClaudeModel,
   Static<typeof TClaudeGenerationParameters>
 > {
-  readonly models = ClaudeModels;
+  readonly models = ClaudeModel;
   private _tools: Map<string, ClaudeTool> = new Map();
 
   get tools() {
