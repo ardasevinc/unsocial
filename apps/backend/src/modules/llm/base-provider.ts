@@ -1,3 +1,5 @@
+import { type ClaudeResponse } from './claude.js';
+
 type LLMProviderConfig = {
   apiKey: string;
   endpoint: string;
@@ -11,7 +13,7 @@ abstract class LLMProvider<Models, GenerationParameters> {
 
   constructor(protected readonly config: LLMProviderConfig) {}
 
-  abstract generate(params: GenerationParameters): Promise<string | boolean>;
+  abstract generate(params: GenerationParameters): Promise<ClaudeResponse>;
 }
 
 export { LLMProvider, type LLMProviderConfig };
