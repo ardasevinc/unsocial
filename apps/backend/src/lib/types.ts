@@ -14,4 +14,9 @@ type Env = Static<typeof TEnv>;
 const Nullable = <T extends TSchema>(schema: T) =>
   Type.Union([schema, Type.Null()]);
 
-export { TEnv, Env, Nullable };
+enum ValidationError {
+  RESPONSE_VALIDATION_ERROR = 'response_validation_error',
+  ERROR_RESPONSE_VALIDATION_ERROR = 'error_response_validation_error',
+}
+
+export { TEnv, type Env, Nullable, ValidationError };

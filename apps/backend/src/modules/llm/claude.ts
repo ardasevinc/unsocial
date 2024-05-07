@@ -1,5 +1,5 @@
 import { Type, type Static } from '@sinclair/typebox';
-import { Nullable } from '@/lib/types.js';
+import { Nullable, ValidationError } from '@/lib/types.js';
 import { LLMProvider, LLMProviderConfig } from './base-provider.js';
 import { Check } from '@sinclair/typebox/value';
 
@@ -111,11 +111,6 @@ enum ClaudeApiError {
   RATE_LIMIT_ERROR = 'rate_limit_error',
 }
 
-enum ClaudeGenericError {
-  RESPONSE_VALIDATION_ERROR = 'response_validation_error',
-  ERROR_RESPONSE_VALIDATION_ERROR = 'error_response_validation_error',
-}
-
 const TClaudeErrorResponse = Type.Readonly(
   Type.Object({
     type: Type.Literal('error'),
@@ -132,7 +127,7 @@ type GenerateReturnParameters = {
 
 class ClaudeError extends Error {
   readonly type;
-  constructor(type: ClaudeApiError | ClaudeGenericError, ...params: string[]) {
+  constructor(type: ClaudeApiError | ValidationError, ...params: string[]) {
     super(...params);
 
     if (Error.captureStackTrace) {
@@ -209,7 +204,7 @@ class Anthropic extends LLMProvider<
         throw new ClaudeError(error.type);
       } else {
         throw new ClaudeError(
-          ClaudeGenericError.ERROR_RESPONSE_VALIDATION_ERROR,
+          ValidationError.ERROR_RESPONSE_VALIDATION_ERROR,
           `Error Response Validation Failed. statusCode: ${response.status}, statusText: ${response.statusText}`,
         );
       }
@@ -217,7 +212,7 @@ class Anthropic extends LLMProvider<
       return responseData;
     } else {
       throw new ClaudeError(
-        ClaudeGenericError.RESPONSE_VALIDATION_ERROR,
+        ValidationError.RESPONSE_VALIDATION_ERROR,
         `Response Validation Failed statusCode: ${response.status}, statusText: ${response.statusText}`,
       );
     }
