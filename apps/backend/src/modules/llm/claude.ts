@@ -86,7 +86,7 @@ const TClaudeResponse = Type.Readonly(
             description:
               'the only value possible right now is `text` but kept as generic string for future compatibility as to not break the validation if this changes',
           }),
-          content: Type.String(),
+          text: Type.String(),
         }),
       ),
     ),
@@ -168,10 +168,10 @@ class Anthropic extends LLMProvider<
       stop_sequences: stopSequences,
       top_k: topK,
       top_p: topP,
-      tools: this.tools,
     };
 
     const response = await fetch(endpoint, {
+      method: 'POST',
       headers,
       body: JSON.stringify(body),
     });
@@ -191,12 +191,18 @@ class Anthropic extends LLMProvider<
       }
       return false;
     } else if (Check(TClaudeResponse, responseData)) {
-      return responseData.content[0].content;
+      return responseData.content[0].text;
     } else {
-      fastify.log.warn({
-        status: { code: response.status, text: response.statusText },
-      }, "Claude: Response validation failed");
+      fastify.log.warn(
+        {
+          status: { code: response.status, text: response.statusText },
+          response: responseData,
+        },
+        'Claude: Response validation failed',
+      );
       return false;
     }
   }
 }
+
+export { Anthropic };
