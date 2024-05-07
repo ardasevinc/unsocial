@@ -10,9 +10,9 @@ generator client {
 }
 
 generator prismabox {
-  provider = "prismabox"
+  provider  = "prismabox"
   // you can optionally specify the output location. Defaults to ./prismabox
-  output = "../src/lib/db-types"
+  output    = "../src/lib/db-types"
   // optionally enable the data model generation. See the data model section below for more info
   dataModel = true
 }
@@ -58,7 +58,7 @@ model SimulationEvent {
   localImportanceScore  Int        @map("local_importance_score")
   simulationId          Int        @map("simulation_id")
   simulation            Simulation @relation(fields: [simulationId], references: [id], onDelete: Cascade)
-  isGlobal              Boolean
+  isGlobal              Boolean    @map("is_global")
   locationId            Int?       @map("location_id")
   location              Location?  @relation(fields: [locationId], references: [id])
 
@@ -76,7 +76,7 @@ enum EventType {
   GLOBAL
   SPORTS
   SCIENCE
-  
+
   @@map("event_type")
 }
 
@@ -123,31 +123,33 @@ enum AgentType {
 }
 
 model Post {
-  id          BigInt   @id @default(autoincrement())
-  created     DateTime @default(now())
-  updated     DateTime @updatedAt
+  id          BigInt      @id @default(autoincrement())
+  created     DateTime    @default(now())
+  updated     DateTime    @updatedAt
   content     String
   comments    Reply[]
   likes       Like[]
-  isRepost    Boolean  @map("is_repost")
-  repostCount Int      @default(0) @map("repost_count")
-  ownerId     Int      @map("owner_id")
-  owner       Agent    @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  isRepost    Boolean     @map("is_repost")
+  repostCount Int         @default(0) @map("repost_count")
+  ownerId     Int         @map("owner_id")
+  owner       Agent       @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  generation  Generation?
 
   @@map("posts")
 }
 
 model Reply {
-  id          BigInt   @id @default(autoincrement())
-  created     DateTime @default(now())
-  updated     DateTime @updatedAt
+  id          BigInt      @id @default(autoincrement())
+  created     DateTime    @default(now())
+  updated     DateTime    @updatedAt
   content     String
   likes       Like[]
-  repostCount Int      @default(0) @map("repost_count")
-  postId      BigInt   @map("post_id")
-  post        Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
-  authorId    Int      @map("author_id")
-  author      Agent    @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  repostCount Int         @default(0) @map("repost_count")
+  postId      BigInt      @map("post_id")
+  post        Post        @relation(fields: [postId], references: [id], onDelete: Cascade)
+  authorId    Int         @map("author_id")
+  author      Agent       @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  generation  Generation?
 
   @@map("replies")
 }
@@ -156,14 +158,35 @@ model Like {
   id      BigInt   @id @default(autoincrement())
   created DateTime @default(now())
   updated DateTime @updatedAt
-  post_id BigInt
-  post    Post     @relation(fields: [post_id], references: [id], onDelete: Cascade)
+  postId  BigInt   @map("post_id")
+  post    Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
   agentId Int      @map("agent_id")
   agent   Agent    @relation(fields: [agentId], references: [id], onDelete: Cascade)
   replyId BigInt   @map("reply_id")
   reply   Reply    @relation(fields: [replyId], references: [id], onDelete: Cascade)
 
   @@map("likes")
+}
+
+model Generation {
+  id      String    @id
+  created DateTime
+  model   String
+  usage   LLMUsage?
+  post    Post?     @relation(fields: [postId], references: [id])
+  postId  BigInt?   @unique @map("post_id")
+  reply   Reply     @relation(fields: [replyId], references: [id])
+  replyId BigInt    @unique @map("reply_id")
+}
+
+model LLMUsage {
+  id               BigInt     @id @default(autoincrement())
+  completionTokens Int        @map("completion_tokens")
+  promptTokens     Int        @map("prompt_tokens")
+  totalTokens      Int        @map("total_tokens")
+  totalCost        Decimal    @map("total_cost") @db.Money
+  generation       Generation @relation(fields: [generationId], references: [id])
+  generationId     String     @unique @map("generation_id")
 }
 
 model HumanAccount {
