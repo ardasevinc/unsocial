@@ -1,12 +1,12 @@
-import { Type } from '@sinclair/typebox';
+import { Type } from "@sinclair/typebox";
 
-import { _Nullable } from './__nullable__.js';
+import { _Nullable } from "./__nullable__";
 
 export const LikePlain = Type.Object({
   id: Type.Integer(),
   created: Type.Date(),
   updated: Type.Date(),
-  post_id: Type.Integer(),
+  postId: Type.Integer(),
   agentId: Type.Integer(),
   replyId: Type.Integer(),
 });
@@ -52,15 +52,15 @@ export const LikeWhere = Type.Union([
   Type.Composite([
     Type.Pick(
       Type.Required(
-        Type.Composite([Type.Object({}), Type.Pick(LikePlain, ['id'])]),
+        Type.Composite([Type.Object({}), Type.Pick(LikePlain, ["id"])]),
       ),
-      ['id'],
+      ["id"],
     ),
     Type.Omit(
       Type.Partial(
-        Type.Composite([Type.Object({}), Type.Pick(LikePlain, ['id'])]),
+        Type.Composite([Type.Object({}), Type.Pick(LikePlain, ["id"])]),
       ),
-      ['id'],
+      ["id"],
     ),
   ]),
 ]);
@@ -68,10 +68,10 @@ export const LikeWhere = Type.Union([
 export const LikeDataPlain = Type.Object({
   created: Type.Date(),
   updated: Type.Date(),
-  post_id: Type.Integer(),
 });
 
 export const LikeDataRelations = Type.Object({
+  postId: Type.Integer(),
   agentId: Type.Integer(),
   replyId: Type.Integer(),
 });
@@ -84,10 +84,10 @@ export const LikeData = Type.Composite([LikeDataPlain, LikeDataRelations], {
 export const LikeDataPlainOptional = Type.Object({
   created: Type.Optional(Type.Date()),
   updated: Type.Optional(Type.Date()),
-  post_id: Type.Optional(Type.Integer()),
 });
 
 export const LikeDataRelationsOptional = Type.Object({
+  postId: Type.Optional(Type.Integer()),
   agentId: Type.Optional(Type.Integer()),
   replyId: Type.Optional(Type.Integer()),
 });

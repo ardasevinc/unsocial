@@ -1,6 +1,6 @@
-import { Type } from '@sinclair/typebox';
+import { Type } from "@sinclair/typebox";
 
-import { _Nullable } from './__nullable__.js';
+import { _Nullable } from "./__nullable__";
 
 export const PostPlain = Type.Object({
   id: Type.Integer(),
@@ -29,7 +29,7 @@ export const PostRelations = Type.Object({
       id: Type.Integer(),
       created: Type.Date(),
       updated: Type.Date(),
-      post_id: Type.Integer(),
+      postId: Type.Integer(),
       agentId: Type.Integer(),
       replyId: Type.Integer(),
     }),
@@ -45,6 +45,15 @@ export const PostRelations = Type.Object({
     engagementProbability: _Nullable(Type.Number()),
     locationId: _Nullable(Type.Integer()),
   }),
+  generation: _Nullable(
+    Type.Object({
+      id: Type.String(),
+      created: Type.Date(),
+      model: Type.String(),
+      postId: _Nullable(Type.Integer()),
+      replyId: Type.Integer(),
+    }),
+  ),
 });
 
 export const Post = Type.Composite([PostPlain, PostRelations], {
@@ -56,15 +65,15 @@ export const PostWhere = Type.Union([
   Type.Composite([
     Type.Pick(
       Type.Required(
-        Type.Composite([Type.Object({}), Type.Pick(PostPlain, ['id'])]),
+        Type.Composite([Type.Object({}), Type.Pick(PostPlain, ["id"])]),
       ),
-      ['id'],
+      ["id"],
     ),
     Type.Omit(
       Type.Partial(
-        Type.Composite([Type.Object({}), Type.Pick(PostPlain, ['id'])]),
+        Type.Composite([Type.Object({}), Type.Pick(PostPlain, ["id"])]),
       ),
-      ['id'],
+      ["id"],
     ),
   ]),
 ]);

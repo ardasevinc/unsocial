@@ -1,6 +1,6 @@
-import { Type } from '@sinclair/typebox';
+import { Type } from "@sinclair/typebox";
 
-import { _Nullable } from './__nullable__.js';
+import { _Nullable } from "./__nullable__";
 
 export const HumanAccountPlain = Type.Object({
   id: Type.String(),
@@ -44,19 +44,19 @@ export const HumanAccountWhere = Type.Union([
       Type.Required(
         Type.Composite([
           Type.Object({}),
-          Type.Pick(HumanAccountPlain, ['id', 'agentId']),
+          Type.Pick(HumanAccountPlain, ["id", "agentId"]),
         ]),
       ),
-      ['id'],
+      ["id"],
     ),
     Type.Omit(
       Type.Partial(
         Type.Composite([
           Type.Object({}),
-          Type.Pick(HumanAccountPlain, ['id', 'agentId']),
+          Type.Pick(HumanAccountPlain, ["id", "agentId"]),
         ]),
       ),
-      ['id'],
+      ["id"],
     ),
   ]),
   Type.Composite([
@@ -64,19 +64,19 @@ export const HumanAccountWhere = Type.Union([
       Type.Required(
         Type.Composite([
           Type.Object({}),
-          Type.Pick(HumanAccountPlain, ['id', 'agentId']),
+          Type.Pick(HumanAccountPlain, ["id", "agentId"]),
         ]),
       ),
-      ['agentId'],
+      ["agentId"],
     ),
     Type.Omit(
       Type.Partial(
         Type.Composite([
           Type.Object({}),
-          Type.Pick(HumanAccountPlain, ['id', 'agentId']),
+          Type.Pick(HumanAccountPlain, ["id", "agentId"]),
         ]),
       ),
-      ['agentId'],
+      ["agentId"],
     ),
   ]),
 ]);

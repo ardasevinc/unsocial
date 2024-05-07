@@ -1,6 +1,6 @@
 import { Type } from "@sinclair/typebox";
 
-import { _Nullable } from "./__nullable__.js";
+import { _Nullable } from "./__nullable__";
 
 export const AgentPlain = Type.Object({
   id: Type.Integer(),
@@ -69,7 +69,7 @@ export const AgentRelations = Type.Object({
       id: Type.Integer(),
       created: Type.Date(),
       updated: Type.Date(),
-      post_id: Type.Integer(),
+      postId: Type.Integer(),
       agentId: Type.Integer(),
       replyId: Type.Integer(),
     }),

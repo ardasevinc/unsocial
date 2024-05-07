@@ -1,6 +1,6 @@
-import { Type } from '@sinclair/typebox';
+import { Type } from "@sinclair/typebox";
 
-import { _Nullable } from './__nullable__.js';
+import { _Nullable } from "./__nullable__";
 
 export const SimulationPlain = Type.Object({
   id: Type.Integer(),
@@ -14,11 +14,11 @@ export const SimulationPlain = Type.Object({
 
 export const SimulationRelations = Type.Object({
   simulationStatus: Type.Union([
-    Type.Literal('CREATED'),
-    Type.Literal('QUEUED'),
-    Type.Literal('RUNNING'),
-    Type.Literal('PAUSED'),
-    Type.Literal('FINISHED'),
+    Type.Literal("CREATED"),
+    Type.Literal("QUEUED"),
+    Type.Literal("RUNNING"),
+    Type.Literal("PAUSED"),
+    Type.Literal("FINISHED"),
   ]),
   events: Type.Array(
     Type.Object({
@@ -48,15 +48,15 @@ export const SimulationWhere = Type.Union([
   Type.Composite([
     Type.Pick(
       Type.Required(
-        Type.Composite([Type.Object({}), Type.Pick(SimulationPlain, ['id'])]),
+        Type.Composite([Type.Object({}), Type.Pick(SimulationPlain, ["id"])]),
       ),
-      ['id'],
+      ["id"],
     ),
     Type.Omit(
       Type.Partial(
-        Type.Composite([Type.Object({}), Type.Pick(SimulationPlain, ['id'])]),
+        Type.Composite([Type.Object({}), Type.Pick(SimulationPlain, ["id"])]),
       ),
-      ['id'],
+      ["id"],
     ),
   ]),
 ]);
@@ -69,11 +69,11 @@ export const SimulationDataPlain = Type.Object({
   currentTime: Type.Date(),
   chaos: Type.Integer(),
   simulationStatus: Type.Union([
-    Type.Literal('CREATED'),
-    Type.Literal('QUEUED'),
-    Type.Literal('RUNNING'),
-    Type.Literal('PAUSED'),
-    Type.Literal('FINISHED'),
+    Type.Literal("CREATED"),
+    Type.Literal("QUEUED"),
+    Type.Literal("RUNNING"),
+    Type.Literal("PAUSED"),
+    Type.Literal("FINISHED"),
   ]),
 });
 
@@ -96,11 +96,11 @@ export const SimulationDataPlainOptional = Type.Object({
   chaos: Type.Optional(Type.Integer()),
   simulationStatus: Type.Optional(
     Type.Union([
-      Type.Literal('CREATED'),
-      Type.Literal('QUEUED'),
-      Type.Literal('RUNNING'),
-      Type.Literal('PAUSED'),
-      Type.Literal('FINISHED'),
+      Type.Literal("CREATED"),
+      Type.Literal("QUEUED"),
+      Type.Literal("RUNNING"),
+      Type.Literal("PAUSED"),
+      Type.Literal("FINISHED"),
     ]),
   ),
 });

@@ -1,8 +1,8 @@
-import { Type } from '@sinclair/typebox';
+import { Type } from "@sinclair/typebox";
 
-import { _Nullable } from './__nullable__.js';
+import { _Nullable } from "./__nullable__";
 
 export const AgentType = Type.Union([
-  Type.Literal('AI'),
-  Type.Literal('HUMAN'),
+  Type.Literal("AI"),
+  Type.Literal("HUMAN"),
 ]);

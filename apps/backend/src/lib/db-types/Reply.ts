@@ -1,6 +1,6 @@
-import { Type } from '@sinclair/typebox';
+import { Type } from "@sinclair/typebox";
 
-import { _Nullable } from './__nullable__.js';
+import { _Nullable } from "./__nullable__";
 
 export const ReplyPlain = Type.Object({
   id: Type.Integer(),
@@ -18,7 +18,7 @@ export const ReplyRelations = Type.Object({
       id: Type.Integer(),
       created: Type.Date(),
       updated: Type.Date(),
-      post_id: Type.Integer(),
+      postId: Type.Integer(),
       agentId: Type.Integer(),
       replyId: Type.Integer(),
     }),
@@ -43,6 +43,15 @@ export const ReplyRelations = Type.Object({
     engagementProbability: _Nullable(Type.Number()),
     locationId: _Nullable(Type.Integer()),
   }),
+  generation: _Nullable(
+    Type.Object({
+      id: Type.String(),
+      created: Type.Date(),
+      model: Type.String(),
+      postId: _Nullable(Type.Integer()),
+      replyId: Type.Integer(),
+    }),
+  ),
 });
 
 export const Reply = Type.Composite([ReplyPlain, ReplyRelations], {
@@ -54,15 +63,15 @@ export const ReplyWhere = Type.Union([
   Type.Composite([
     Type.Pick(
       Type.Required(
-        Type.Composite([Type.Object({}), Type.Pick(ReplyPlain, ['id'])]),
+        Type.Composite([Type.Object({}), Type.Pick(ReplyPlain, ["id"])]),
       ),
-      ['id'],
+      ["id"],
     ),
     Type.Omit(
       Type.Partial(
-        Type.Composite([Type.Object({}), Type.Pick(ReplyPlain, ['id'])]),
+        Type.Composite([Type.Object({}), Type.Pick(ReplyPlain, ["id"])]),
       ),
-      ['id'],
+      ["id"],
     ),
   ]),
 ]);

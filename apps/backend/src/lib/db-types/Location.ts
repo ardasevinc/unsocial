@@ -1,6 +1,6 @@
-import { Type } from '@sinclair/typebox';
+import { Type } from "@sinclair/typebox";
 
-import { _Nullable } from './__nullable__.js';
+import { _Nullable } from "./__nullable__";
 
 export const LocationPlain = Type.Object({
   id: Type.Integer(),
@@ -50,15 +50,15 @@ export const LocationWhere = Type.Union([
   Type.Composite([
     Type.Pick(
       Type.Required(
-        Type.Composite([Type.Object({}), Type.Pick(LocationPlain, ['id'])]),
+        Type.Composite([Type.Object({}), Type.Pick(LocationPlain, ["id"])]),
       ),
-      ['id'],
+      ["id"],
     ),
     Type.Omit(
       Type.Partial(
-        Type.Composite([Type.Object({}), Type.Pick(LocationPlain, ['id'])]),
+        Type.Composite([Type.Object({}), Type.Pick(LocationPlain, ["id"])]),
       ),
-      ['id'],
+      ["id"],
     ),
   ]),
 ]);

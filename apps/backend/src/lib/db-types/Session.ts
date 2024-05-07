@@ -1,6 +1,6 @@
-import { Type } from '@sinclair/typebox';
+import { Type } from "@sinclair/typebox";
 
-import { _Nullable } from './__nullable__.js';
+import { _Nullable } from "./__nullable__";
 
 export const SessionPlain = Type.Object({
   id: Type.String(),
@@ -26,15 +26,15 @@ export const SessionWhere = Type.Union([
   Type.Composite([
     Type.Pick(
       Type.Required(
-        Type.Composite([Type.Object({}), Type.Pick(SessionPlain, ['id'])]),
+        Type.Composite([Type.Object({}), Type.Pick(SessionPlain, ["id"])]),
       ),
-      ['id'],
+      ["id"],
     ),
     Type.Omit(
       Type.Partial(
-        Type.Composite([Type.Object({}), Type.Pick(SessionPlain, ['id'])]),
+        Type.Composite([Type.Object({}), Type.Pick(SessionPlain, ["id"])]),
       ),
-      ['id'],
+      ["id"],
     ),
   ]),
 ]);
