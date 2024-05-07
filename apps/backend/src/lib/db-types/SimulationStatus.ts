@@ -1,11 +1,11 @@
-import { Type } from "@sinclair/typebox";
+import { Type } from '@sinclair/typebox';
 
-import { _Nullable } from "./__nullable__";
+import { _Nullable } from './__nullable__.js';
 
 export const SimulationStatus = Type.Union([
-  Type.Literal("CREATED"),
-  Type.Literal("QUEUED"),
-  Type.Literal("RUNNING"),
-  Type.Literal("PAUSED"),
-  Type.Literal("FINISHED"),
+  Type.Literal('CREATED'),
+  Type.Literal('QUEUED'),
+  Type.Literal('RUNNING'),
+  Type.Literal('PAUSED'),
+  Type.Literal('FINISHED'),
 ]);

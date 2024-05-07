@@ -1,6 +1,6 @@
 import { Type } from "@sinclair/typebox";
 
-import { _Nullable } from "./__nullable__";
+import { _Nullable } from "./__nullable__.js";
 
 export const AgentPlain = Type.Object({
   id: Type.Integer(),

@@ -1,6 +1,6 @@
-import { Type } from "@sinclair/typebox";
+import { Type } from '@sinclair/typebox';
 
-import { _Nullable } from "./__nullable__";
+import { _Nullable } from './__nullable__.js';
 
 export const ReplyPlain = Type.Object({
   id: Type.Integer(),
@@ -63,15 +63,15 @@ export const ReplyWhere = Type.Union([
   Type.Composite([
     Type.Pick(
       Type.Required(
-        Type.Composite([Type.Object({}), Type.Pick(ReplyPlain, ["id"])]),
+        Type.Composite([Type.Object({}), Type.Pick(ReplyPlain, ['id'])]),
       ),
-      ["id"],
+      ['id'],
     ),
     Type.Omit(
       Type.Partial(
-        Type.Composite([Type.Object({}), Type.Pick(ReplyPlain, ["id"])]),
+        Type.Composite([Type.Object({}), Type.Pick(ReplyPlain, ['id'])]),
       ),
-      ["id"],
+      ['id'],
     ),
   ]),
 ]);

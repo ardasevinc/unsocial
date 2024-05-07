@@ -1,6 +1,6 @@
-import { Type } from "@sinclair/typebox";
+import { Type } from '@sinclair/typebox';
 
-import { _Nullable } from "./__nullable__";
+import { _Nullable } from './__nullable__.js';
 
 export const SimulationEventPlain = Type.Object({
   id: Type.Integer(),
@@ -17,16 +17,16 @@ export const SimulationEventPlain = Type.Object({
 
 export const SimulationEventRelations = Type.Object({
   type: Type.Union([
-    Type.Literal("POLITICAL"),
-    Type.Literal("ECONOMIC"),
-    Type.Literal("SOCIAL"),
-    Type.Literal("TECHNOLOGICAL"),
-    Type.Literal("ENVIRONMENTAL"),
-    Type.Literal("ENTERTAINMENT"),
-    Type.Literal("LEGAL"),
-    Type.Literal("GLOBAL"),
-    Type.Literal("SPORTS"),
-    Type.Literal("SCIENCE"),
+    Type.Literal('POLITICAL'),
+    Type.Literal('ECONOMIC'),
+    Type.Literal('SOCIAL'),
+    Type.Literal('TECHNOLOGICAL'),
+    Type.Literal('ENVIRONMENTAL'),
+    Type.Literal('ENTERTAINMENT'),
+    Type.Literal('LEGAL'),
+    Type.Literal('GLOBAL'),
+    Type.Literal('SPORTS'),
+    Type.Literal('SCIENCE'),
   ]),
   simulation: Type.Object({
     id: Type.Integer(),
@@ -63,19 +63,19 @@ export const SimulationEventWhere = Type.Union([
       Type.Required(
         Type.Composite([
           Type.Object({}),
-          Type.Pick(SimulationEventPlain, ["id"]),
+          Type.Pick(SimulationEventPlain, ['id']),
         ]),
       ),
-      ["id"],
+      ['id'],
     ),
     Type.Omit(
       Type.Partial(
         Type.Composite([
           Type.Object({}),
-          Type.Pick(SimulationEventPlain, ["id"]),
+          Type.Pick(SimulationEventPlain, ['id']),
         ]),
       ),
-      ["id"],
+      ['id'],
     ),
   ]),
 ]);
@@ -85,16 +85,16 @@ export const SimulationEventDataPlain = Type.Object({
   updated: Type.Date(),
   name: Type.String(),
   type: Type.Union([
-    Type.Literal("POLITICAL"),
-    Type.Literal("ECONOMIC"),
-    Type.Literal("SOCIAL"),
-    Type.Literal("TECHNOLOGICAL"),
-    Type.Literal("ENVIRONMENTAL"),
-    Type.Literal("ENTERTAINMENT"),
-    Type.Literal("LEGAL"),
-    Type.Literal("GLOBAL"),
-    Type.Literal("SPORTS"),
-    Type.Literal("SCIENCE"),
+    Type.Literal('POLITICAL'),
+    Type.Literal('ECONOMIC'),
+    Type.Literal('SOCIAL'),
+    Type.Literal('TECHNOLOGICAL'),
+    Type.Literal('ENVIRONMENTAL'),
+    Type.Literal('ENTERTAINMENT'),
+    Type.Literal('LEGAL'),
+    Type.Literal('GLOBAL'),
+    Type.Literal('SPORTS'),
+    Type.Literal('SCIENCE'),
   ]),
   time: Type.Date(),
   globalImportanceScore: Type.Integer(),
@@ -121,16 +121,16 @@ export const SimulationEventDataPlainOptional = Type.Object({
   name: Type.Optional(Type.String()),
   type: Type.Optional(
     Type.Union([
-      Type.Literal("POLITICAL"),
-      Type.Literal("ECONOMIC"),
-      Type.Literal("SOCIAL"),
-      Type.Literal("TECHNOLOGICAL"),
-      Type.Literal("ENVIRONMENTAL"),
-      Type.Literal("ENTERTAINMENT"),
-      Type.Literal("LEGAL"),
-      Type.Literal("GLOBAL"),
-      Type.Literal("SPORTS"),
-      Type.Literal("SCIENCE"),
+      Type.Literal('POLITICAL'),
+      Type.Literal('ECONOMIC'),
+      Type.Literal('SOCIAL'),
+      Type.Literal('TECHNOLOGICAL'),
+      Type.Literal('ENVIRONMENTAL'),
+      Type.Literal('ENTERTAINMENT'),
+      Type.Literal('LEGAL'),
+      Type.Literal('GLOBAL'),
+      Type.Literal('SPORTS'),
+      Type.Literal('SCIENCE'),
     ]),
   ),
   time: Type.Optional(Type.Date()),

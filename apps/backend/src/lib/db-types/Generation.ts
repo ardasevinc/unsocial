@@ -1,6 +1,6 @@
-import { Type } from "@sinclair/typebox";
+import { Type } from '@sinclair/typebox';
 
-import { _Nullable } from "./__nullable__";
+import { _Nullable } from './__nullable__.js';
 
 export const GenerationPlain = Type.Object({
   id: Type.String(),
@@ -57,19 +57,19 @@ export const GenerationWhere = Type.Union([
       Type.Required(
         Type.Composite([
           Type.Object({}),
-          Type.Pick(GenerationPlain, ["id", "postId", "replyId"]),
+          Type.Pick(GenerationPlain, ['id', 'postId', 'replyId']),
         ]),
       ),
-      ["id"],
+      ['id'],
     ),
     Type.Omit(
       Type.Partial(
         Type.Composite([
           Type.Object({}),
-          Type.Pick(GenerationPlain, ["id", "postId", "replyId"]),
+          Type.Pick(GenerationPlain, ['id', 'postId', 'replyId']),
         ]),
       ),
-      ["id"],
+      ['id'],
     ),
   ]),
   Type.Composite([
@@ -77,19 +77,19 @@ export const GenerationWhere = Type.Union([
       Type.Required(
         Type.Composite([
           Type.Object({}),
-          Type.Pick(GenerationPlain, ["id", "postId", "replyId"]),
+          Type.Pick(GenerationPlain, ['id', 'postId', 'replyId']),
         ]),
       ),
-      ["postId"],
+      ['postId'],
     ),
     Type.Omit(
       Type.Partial(
         Type.Composite([
           Type.Object({}),
-          Type.Pick(GenerationPlain, ["id", "postId", "replyId"]),
+          Type.Pick(GenerationPlain, ['id', 'postId', 'replyId']),
         ]),
       ),
-      ["postId"],
+      ['postId'],
     ),
   ]),
   Type.Composite([
@@ -97,19 +97,19 @@ export const GenerationWhere = Type.Union([
       Type.Required(
         Type.Composite([
           Type.Object({}),
-          Type.Pick(GenerationPlain, ["id", "postId", "replyId"]),
+          Type.Pick(GenerationPlain, ['id', 'postId', 'replyId']),
         ]),
       ),
-      ["replyId"],
+      ['replyId'],
     ),
     Type.Omit(
       Type.Partial(
         Type.Composite([
           Type.Object({}),
-          Type.Pick(GenerationPlain, ["id", "postId", "replyId"]),
+          Type.Pick(GenerationPlain, ['id', 'postId', 'replyId']),
         ]),
       ),
-      ["replyId"],
+      ['replyId'],
     ),
   ]),
 ]);
