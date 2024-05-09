@@ -5,7 +5,7 @@ type LLMProviderConfig = {
   endpoint: string;
 };
 
-abstract class LLMProvider<Models, GenerationParameters> {
+abstract class LLMProvider<Models, GenerationParameters, Response> {
   abstract readonly models: Models;
 
   abstract set tools(value: Map<string, any>);
@@ -13,7 +13,7 @@ abstract class LLMProvider<Models, GenerationParameters> {
 
   constructor(protected readonly config: LLMProviderConfig) {}
 
-  abstract generate(params: GenerationParameters): Promise<ClaudeResponse>;
+  abstract generate(params: GenerationParameters): Promise<Response>;
 }
 
 export { LLMProvider, type LLMProviderConfig };

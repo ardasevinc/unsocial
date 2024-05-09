@@ -127,7 +127,10 @@ type GenerateReturnParameters = {
 
 class ClaudeError extends Error {
   readonly type;
-  constructor(type: ClaudeApiError | ValidationError, ...params: string[]) {
+  constructor(
+    type: ClaudeApiError | ValidationError,
+    ...params: Array<string>
+  ) {
     super(...params);
 
     if (Error.captureStackTrace) {
@@ -141,7 +144,8 @@ class ClaudeError extends Error {
 
 class Anthropic extends LLMProvider<
   typeof ClaudeModel,
-  Static<typeof TClaudeGenerationParameters>
+  Static<typeof TClaudeGenerationParameters>,
+  ClaudeResponse
 > {
   readonly models = ClaudeModel;
   private _tools: Map<string, ClaudeTool> = new Map();
@@ -176,7 +180,7 @@ class Anthropic extends LLMProvider<
     headers.set('Content-Type', 'application/json');
     headers.set('anthropic-version', '2023-06-01');
 
-    const body = {
+    const body = JSON.stringify({
       model,
       messages,
       temperature: temperature,
@@ -187,12 +191,12 @@ class Anthropic extends LLMProvider<
       stop_sequences: stopSequences,
       top_k: topK,
       top_p: topP,
-    };
+    });
 
     const response = await fetch(endpoint, {
       method: 'POST',
       headers,
-      body: JSON.stringify(body),
+      body,
     });
 
     const responseData = await response.json();
