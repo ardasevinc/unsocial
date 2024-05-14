@@ -3,7 +3,7 @@ import { Nullable, ValidationError } from '@/lib/types.js';
 import { LLMProvider, LLMProviderConfig } from './base-provider.js';
 import { Check } from '@sinclair/typebox/value';
 
-const TClaudeMessages = Type.Array(
+const TAnthropicMessages = Type.Array(
   Type.Object({
     role: Type.Union([Type.Literal('user'), Type.Literal('assistant')]),
     content: Type.Union([
@@ -29,13 +29,13 @@ const TClaudeMessages = Type.Array(
   }),
 );
 
-enum ClaudeModel {
-  OPUS = 'claude-3-opus-20240229',
-  SONNET = 'claude-3-sonnet-20240229',
-  HAIKU = 'claude-3-haiku-20240307',
+enum AnthropicModel {
+  CLAUDE_OPUS = 'claude-3-opus-20240229',
+  CLAUDE_SONNET = 'claude-3-sonnet-20240229',
+  CLAUDE_HAIKU = 'claude-3-haiku-20240307',
 }
 
-const TClaudeTool = Type.Object({
+const TAnthropicTool = Type.Object({
   name: Type.String(),
   description: Type.Optional(
     Type.String({
@@ -46,24 +46,24 @@ const TClaudeTool = Type.Object({
   input_schema: Type.Any(),
 });
 
-type ClaudeTool = Static<typeof TClaudeTool>;
+type AnthropicTool = Static<typeof TAnthropicTool>;
 
-const TClaudeGenerationParameters = Type.Object({
-  model: Type.Readonly(Type.Enum(ClaudeModel)),
+const TAnthropicGenerationParameters = Type.Object({
+  model: Type.Readonly(Type.Enum(AnthropicModel)),
   systemPrompt: Type.Readonly(Type.String()),
   temperature: Type.Readonly(Type.Number({ minimum: 0, maximum: 1.0 })),
   maxTokens: Type.Readonly(Type.Integer({ minimum: 1, maximum: 4096 })),
   stream: Type.ReadonlyOptional(Type.Boolean({ default: false })),
-  messages: TClaudeMessages,
+  messages: TAnthropicMessages,
   metadata: Type.ReadonlyOptional(Type.Object({ user_id: Type.String() })),
   stopSequences: Type.ReadonlyOptional(Type.Array(Type.String())),
   topK: Type.ReadonlyOptional(Type.Integer()),
   topP: Type.ReadonlyOptional(Type.Number()),
 });
 
-const TClaudeApiBodyParameters = Type.Composite([
-  TClaudeGenerationParameters,
-  Type.Object({ tools: Type.Optional(TClaudeTool) }),
+const TAnthropicApiBodyParameters = Type.Composite([
+  TAnthropicGenerationParameters,
+  Type.Object({ tools: Type.Optional(TAnthropicTool) }),
 ]);
 
 enum StopReason {
@@ -73,7 +73,7 @@ enum StopReason {
   TOOL_USE = 'tool_use',
 }
 
-const TClaudeResponse = Type.Readonly(
+const TAnthropicResponse = Type.Readonly(
   Type.Object({
     id: Type.String(),
     type: Type.Literal('message'),
@@ -89,7 +89,7 @@ const TClaudeResponse = Type.Readonly(
         }),
       ),
     ),
-    model: Type.Enum(ClaudeModel),
+    model: Type.Enum(AnthropicModel),
     stop_reason: Nullable(Type.Enum(StopReason)),
     stop_sequence: Nullable(Type.String()),
     usage: Type.Object({
@@ -99,9 +99,9 @@ const TClaudeResponse = Type.Readonly(
   }),
 );
 
-type ClaudeResponse = Static<typeof TClaudeResponse>;
+type AnthropicResponse = Static<typeof TAnthropicResponse>;
 
-enum ClaudeApiError {
+enum AnthropicApiError {
   API_ERROR = 'api_error',
   AUTHENTICATION_ERROR = 'authentication_error',
   INVALID_REQUEST_ERROR = 'invalid_request_error',
@@ -111,44 +111,44 @@ enum ClaudeApiError {
   RATE_LIMIT_ERROR = 'rate_limit_error',
 }
 
-const TClaudeErrorResponse = Type.Readonly(
+const TAnthropicErrorResponse = Type.Readonly(
   Type.Object({
     type: Type.Literal('error'),
     error: Type.Object({
-      type: Type.Enum(ClaudeApiError),
+      type: Type.Enum(AnthropicApiError),
       message: Type.Optional(Type.String()),
     }),
   }),
 );
 
 type GenerateReturnParameters = {
-  completion: Static<typeof TClaudeResponse>;
+  completion: Static<typeof TAnthropicResponse>;
 };
 
-class ClaudeError extends Error {
+class AnthropicError extends Error {
   readonly type;
   constructor(
-    type: ClaudeApiError | ValidationError,
+    type: AnthropicApiError | ValidationError,
     ...params: Array<string>
   ) {
     super(...params);
 
     if (Error.captureStackTrace) {
-      Error.captureStackTrace(this, ClaudeError);
+      Error.captureStackTrace(this, AnthropicError);
     }
 
-    this.name = 'ClaudeError';
+    this.name = 'AnthropicError';
     this.type = type;
   }
 }
 
 class Anthropic extends LLMProvider<
-  typeof ClaudeModel,
-  Static<typeof TClaudeGenerationParameters>,
-  ClaudeResponse
+  typeof AnthropicModel,
+  Static<typeof TAnthropicGenerationParameters>,
+  AnthropicResponse
 > {
-  readonly models = ClaudeModel;
-  private _tools: Map<string, ClaudeTool> = new Map();
+  readonly models = AnthropicModel;
+  private _tools: Map<string, AnthropicTool> = new Map();
 
   get tools() {
     return this._tools;
@@ -173,7 +173,7 @@ class Anthropic extends LLMProvider<
     stopSequences,
     topK,
     topP,
-  }: Static<typeof TClaudeGenerationParameters>) {
+  }: Static<typeof TAnthropicGenerationParameters>) {
     const endpoint = new URL(this.config.endpoint);
     const headers = new Headers();
     headers.set('x-api-key', this.config.apiKey);
@@ -202,20 +202,23 @@ class Anthropic extends LLMProvider<
     const responseData = await response.json();
 
     if (!response.ok) {
-      const isClaudeErrorResponse = Check(TClaudeErrorResponse, responseData);
-      if (isClaudeErrorResponse) {
+      const isAnthropicErrorResponse = Check(
+        TAnthropicErrorResponse,
+        responseData,
+      );
+      if (isAnthropicErrorResponse) {
         const { error } = responseData;
-        throw new ClaudeError(error.type);
+        throw new AnthropicError(error.type);
       } else {
-        throw new ClaudeError(
+        throw new AnthropicError(
           ValidationError.ERROR_RESPONSE_VALIDATION_ERROR,
           `Error Response Validation Failed. statusCode: ${response.status}, statusText: ${response.statusText}`,
         );
       }
-    } else if (Check(TClaudeResponse, responseData)) {
+    } else if (Check(TAnthropicResponse, responseData)) {
       return responseData;
     } else {
-      throw new ClaudeError(
+      throw new AnthropicError(
         ValidationError.RESPONSE_VALIDATION_ERROR,
         `Response Validation Failed statusCode: ${response.status}, statusText: ${response.statusText}`,
       );
@@ -223,4 +226,4 @@ class Anthropic extends LLMProvider<
   }
 }
 
-export { Anthropic, TClaudeResponse };
+export { Anthropic, AnthropicError, AnthropicModel, TAnthropicResponse };
