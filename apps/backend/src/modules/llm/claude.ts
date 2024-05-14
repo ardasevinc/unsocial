@@ -223,4 +223,4 @@ class Anthropic extends LLMProvider<
   }
 }
 
-export { Anthropic, type ClaudeResponse };
+export { Anthropic, TClaudeResponse };

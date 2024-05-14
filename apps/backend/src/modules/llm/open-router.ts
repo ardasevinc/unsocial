@@ -278,7 +278,10 @@ class OpenRouter extends LLMProvider<
 
     const responseData = await response.json();
 
-    if (!response.ok) {
+    if (
+      !response.ok ||
+      (responseData as Static<typeof TOpenRouterErrorResponse>)?.error
+    ) {
       const isOpenRouterErrorResponse = Check(
         TOpenRouterErrorResponse,
         responseData,
@@ -296,6 +299,7 @@ class OpenRouter extends LLMProvider<
     } else if (Check(TOpenRouterResponse, responseData)) {
       return responseData;
     } else {
+      console.log(JSON.stringify(responseData, null, 2));
       throw new OpenRouterError(
         ValidationError.RESPONSE_VALIDATION_ERROR,
         `Response Validation Failed statusCode: ${response.status}, statusText: ${response.statusText}`,
@@ -304,4 +308,10 @@ class OpenRouter extends LLMProvider<
   }
 }
 
-export { OpenRouter, OpenRouterModel, OpenRouterError };
+export {
+  OpenRouter,
+  OpenRouterModel,
+  OpenRouterError,
+  TNonStreamingChoice,
+  TStreamingChoice,
+};
