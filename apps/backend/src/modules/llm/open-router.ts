@@ -241,6 +241,7 @@ class OpenRouter extends LLMProvider<
   }: Static<typeof TOpenRouterGenerationParameters>) {
     const endpoint = new URL(this.config.endpoint);
     const headers = new Headers();
+    headers.set('Authorization', `Bearer ${this.config.apiKey}`);
     headers.set('HTTP-Referer', 'https://x.com/ardasevinc_4');
     headers.set('X-Title', 'Unsocial Development');
     headers.set('Content-Type', 'application/json');
@@ -285,7 +286,7 @@ class OpenRouter extends LLMProvider<
 
       if (isOpenRouterErrorResponse) {
         const { error } = responseData;
-        throw new OpenRouterError(error.code);
+        throw new OpenRouterError(error.code, error.message);
       } else {
         throw new OpenRouterError(
           ValidationError.ERROR_RESPONSE_VALIDATION_ERROR,
@@ -303,4 +304,4 @@ class OpenRouter extends LLMProvider<
   }
 }
 
-export { OpenRouter, OpenRouterModel };
+export { OpenRouter, OpenRouterModel, OpenRouterError };
