@@ -1,5 +1,3 @@
-import { type ClaudeResponse } from './claude.js';
-
 type LLMProviderConfig = {
   apiKey: string;
   endpoint: string;

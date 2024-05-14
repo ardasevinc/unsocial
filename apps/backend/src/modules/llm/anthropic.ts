@@ -226,4 +226,4 @@ class Anthropic extends LLMProvider<
   }
 }
 
-export { Anthropic, AnthropicError, AnthropicModel, TAnthropicResponse };
+export { Anthropic, AnthropicError, AnthropicModel, AnthropicResponse };
