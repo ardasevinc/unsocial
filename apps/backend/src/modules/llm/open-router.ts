@@ -13,6 +13,7 @@ enum OpenRouterModel {
   CLAUDE3_HAIKU = 'anthropic/claude-3-haiku',
   WIZARDLM2_8x22B = 'microsoft/wizardlm-2-8x22b',
   SOLILOQUY_8B = 'lynn/soliloquy-l3',
+  GPT4o = 'openai/gpt-4o',
 }
 
 const TChatRole = Type.Union([
