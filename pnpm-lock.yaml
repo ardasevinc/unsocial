@@ -57,6 +57,9 @@ importers:
       concurrently:
         specifier: ^8.2.2
         version: 8.2.2
+      fastify-tsconfig:
+        specifier: ^2.0.0
+        version: 2.0.0
       nodemon:
         specifier: ^3.1.0
         version: 3.1.0
@@ -1285,6 +1288,10 @@ packages:
 
   fastify-plugin@4.5.1:
     resolution: {integrity: sha512-stRHYGeuqpEZTL1Ef0Ovr2ltazUT9g844X5z/zEBFLG8RYlpDiOCIG+ATvYEp+/zmc7sN29mcIMp8gvYplYPIQ==}
+
+  fastify-tsconfig@2.0.0:
+    resolution: {integrity: sha512-pvYwdtbZUJr/aTD7ZE0rGlvtYpx7IThHKVLBoqCKmT3FJpwm23XA2+PDmq8ZzfqqG4ajpyrHd5bkIixcIFjPhQ==}
+    engines: {node: '>=18.0.0'}
 
   fastify@4.26.2:
     resolution: {integrity: sha512-90pjTuPGrfVKtdpLeLzND5nyC4woXZN5VadiNQCicj/iJU4viNHKhsAnb7jmv1vu2IzkLXyBiCzdWuzeXgQ5Ug==}
@@ -3647,6 +3654,8 @@ snapshots:
   fast-uri@2.3.0: {}
 
   fastify-plugin@4.5.1: {}
+
+  fastify-tsconfig@2.0.0: {}
 
   fastify@4.26.2:
     dependencies:

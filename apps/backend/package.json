@@ -38,6 +38,7 @@
   "devDependencies": {
     "@types/node": "^20",
     "concurrently": "^8.2.2",
+    "fastify-tsconfig": "^2.0.0",
     "nodemon": "^3.1.0",
     "prisma": "^5.12.1",
     "prismabox": "^0.3.2",
