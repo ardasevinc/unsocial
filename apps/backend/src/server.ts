@@ -2,6 +2,7 @@ import Fastify from 'fastify';
 import { TypeBoxTypeProvider } from '@fastify/type-provider-typebox';
 import { fastifyEnv, type FastifyEnvOptions } from '@fastify/env';
 import prismaPlugin from '@/lib/plugins/prisma.js';
+import fastifySensible from '@fastify/sensible';
 import { type Env, TEnv } from '@/lib/types.js';
 import SimulationRoute from '@/routes/simulation/index.js';
 
@@ -43,6 +44,7 @@ const app = async () => {
     await fastify.register(fastifyEnv, fastifyEnvOptions);
     fastify.log.debug(`MODE: ${fastify.env.NODE_ENV}`);
     await fastify.register(prismaPlugin, { config: {} });
+    await fastify.register(fastifySensible);
     fastify.register(SimulationRoute);
 
     await fastify.listen({ host: '0.0.0.0', port: fastify.env.PORT });
