@@ -41,8 +41,14 @@ const fastifyEnvOptions = {
   confKey: 'env',
 } satisfies FastifyEnvOptions;
 
-// TODO: Improve server startup and shutdown.
+/* TODO: Improve server startup and shutdown.
+ * On Startup: Resume last running simulation.
+ * On Shutdown: Stop running simulations gracefully.
+ * we need a way to know when simulations are paused by server shutdown
+ * add a reason field somewhere, so we know why a simulation is stopped.
+ */
 const bootApp = async () => {
+  // The following structure should be followed inside every registration level
   /* Recommended booting order:
    * external plugins
    * our plugins
@@ -65,6 +71,10 @@ const bootApp = async () => {
 
     fastify.log.debug(`PID: ${process.pid}`);
     await fastify.listen({ host: '0.0.0.0', port: fastify.env.PORT });
+    fastify.log.debug(`PLUGINS:\n${fastify.printPlugins()}`);
+    fastify.log.debug(
+      `ROUTES:\n${fastify.printRoutes({ commonPrefix: false })}`,
+    );
   } catch (error) {
     fastify.log.error({ msg: 'Error during server startup', error });
     process.exit(1);
