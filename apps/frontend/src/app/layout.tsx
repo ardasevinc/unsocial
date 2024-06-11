@@ -5,7 +5,7 @@ import './globals.css';
 
 export const metadata: Metadata = {
   title: 'Unsocial',
-  description: 'Unsocial: AI Social Graph',
+  description: 'Unsocial: Social Network Simulation with Large Language Models',
 };
 
 export default function RootLayout({
@@ -14,10 +14,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang='en' className='dark'>
-      <body className={`${GeistSans.variable} ${GeistMono.variable} min-h-dvh`}>
-        {children}
-      </body>
+    <html
+      lang='en'
+      className={`dark ${GeistSans.variable} ${GeistMono.variable}`}
+    >
+      <body className='min-h-dvh scroll-smooth antialiased'>{children}</body>
     </html>
   );
 }
