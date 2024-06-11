@@ -5,6 +5,7 @@ import prismaPlugin from '@/lib/plugins/prisma.js';
 import fastifySensible from '@fastify/sensible';
 import fastifyGracefulShutdown from 'fastify-graceful-shutdown';
 import fastifyRedis from '@fastify/redis';
+import appRouter from '@/lib/plugins/router.js';
 import { type Env } from '@/lib/schemas/env.js';
 
 // TODO: Create a configuration loader function page: 26 in fastify book
@@ -60,6 +61,8 @@ const bootApp = async () => {
         next();
       });
     });
+
+    fastify.register(appRouter);
 
     fastify.log.debug(`PID: ${process.pid}`);
     await fastify.listen({ host: '0.0.0.0', port: fastify.env.PORT });

@@ -1,4 +1,5 @@
 import type { FastifyRequest, FastifyReply } from 'fastify';
+import { Static, Type } from '@sinclair/typebox';
 
 const opts = {};
 
