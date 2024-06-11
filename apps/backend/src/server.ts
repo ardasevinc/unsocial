@@ -1,11 +1,10 @@
 import Fastify from 'fastify';
 import { TypeBoxTypeProvider } from '@fastify/type-provider-typebox';
-import { fastifyEnv, type FastifyEnvOptions } from '@fastify/env';
+import appEnv from '@/lib/plugins/env.js';
 import prismaPlugin from '@/lib/plugins/prisma.js';
 import fastifySensible from '@fastify/sensible';
 import fastifyGracefulShutdown from 'fastify-graceful-shutdown';
-import { type Env, TEnv } from '@/lib/types.js';
-import SimulationRoute from '@/routes/simulation/index.js';
+import { type Env } from '@/lib/schemas/env.js';
 
 // TODO: Create a configuration loader function page: 26 in fastify book
 const envToLogger: Record<Env['NODE_ENV'], any> = {
@@ -29,18 +28,6 @@ const fastify = Fastify({
   logger: envToLogger[nodeEnv] ?? true,
 }).withTypeProvider<TypeBoxTypeProvider>();
 
-declare module 'fastify' {
-  interface FastifyInstance {
-    env: Env;
-  }
-}
-
-const fastifyEnvOptions = {
-  schema: TEnv,
-  dotenv: true,
-  confKey: 'env',
-} satisfies FastifyEnvOptions;
-
 /* TODO: Improve server startup and shutdown.
  * On Startup: Resume last running simulation.
  * On Shutdown: Stop running simulations gracefully.
@@ -57,7 +44,7 @@ const bootApp = async () => {
    * services - routes etc
    */
   try {
-    await fastify.register(fastifyEnv, fastifyEnvOptions);
+    await fastify.register(appEnv);
     fastify.log.debug(`MODE: ${fastify.env.NODE_ENV}`);
     await fastify.register(prismaPlugin, { config: {} });
     fastify.register(fastifySensible);
@@ -67,7 +54,6 @@ const bootApp = async () => {
         next();
       });
     });
-    fastify.register(SimulationRoute);
 
     fastify.log.debug(`PID: ${process.pid}`);
     await fastify.listen({ host: '0.0.0.0', port: fastify.env.PORT });
