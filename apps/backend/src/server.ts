@@ -4,6 +4,7 @@ import appEnv from '@/lib/plugins/env.js';
 import prismaPlugin from '@/lib/plugins/prisma.js';
 import fastifySensible from '@fastify/sensible';
 import fastifyGracefulShutdown from 'fastify-graceful-shutdown';
+import fastifyRedis from '@fastify/redis';
 import { type Env } from '@/lib/schemas/env.js';
 
 // TODO: Create a configuration loader function page: 26 in fastify book
@@ -48,6 +49,11 @@ const bootApp = async () => {
     fastify.log.debug(`MODE: ${fastify.env.NODE_ENV}`);
     await fastify.register(prismaPlugin, { config: {} });
     fastify.register(fastifySensible);
+    fastify.register(fastifyRedis, {
+      host: '0.0.0.0',
+      password: fastify.env.REDIS_PASS,
+      port: fastify.env.REDIS_PORT,
+    });
     fastify.register(fastifyGracefulShutdown).after(() => {
       fastify.gracefulShutdown((signal, next) => {
         fastify.log.info('Received signal to shutdown: %s', signal);

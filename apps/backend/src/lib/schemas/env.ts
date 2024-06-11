@@ -8,6 +8,8 @@ const TEnv = Type.Object(
       Type.Literal('development'),
       Type.Literal('test'),
     ]),
+    REDIS_PASS: Type.Readonly(Type.String()),
+    REDIS_PORT: Type.Readonly(Type.Integer()),
     DEV_OPENAI_API_KEY: Type.String(),
     DEV_ANTHROPIC_API_KEY: Type.String(),
     DEV_OPENROUTER_API_KEY: Type.String(),
