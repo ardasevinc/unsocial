@@ -27,11 +27,12 @@ model Simulation {
   id               Int               @id @default(autoincrement())
   created          DateTime          @default(now())
   updated          DateTime          @updatedAt
-  simulationStart  DateTime          @map("simulation_start")
-  simulationEnd    DateTime          @map("simulation_end")
+  end              DateTime          @map("simulation_end")
   currentTime      DateTime          @map("current_time")
   chaos            Int
   simulationStatus SimulationStatus  @default(CREATED) @map("simulation_status")
+  agents           Agent[]
+  posts            Post[]
   events           SimulationEvent[]
 
   @@map("simulations")
@@ -54,11 +55,9 @@ model SimulationEvent {
   name                  String
   type                  EventType
   time                  DateTime
-  globalImportanceScore Int        @map("global_importance_score")
-  localImportanceScore  Int        @map("local_importance_score")
+  importanceScore       Int        @map("importance_score")
   simulationId          Int        @map("simulation_id")
   simulation            Simulation @relation(fields: [simulationId], references: [id], onDelete: Cascade)
-  isGlobal              Boolean    @map("is_global")
   locationId            Int?       @map("location_id")
   location              Location?  @relation(fields: [locationId], references: [id])
 
@@ -103,8 +102,8 @@ model Agent {
   timezone              String
   prompt                String?
   engagementProbability Float?        @map("engagement_probability")
-  followedBy            Agent[]       @relation("AgentFollows")
-  following             Agent[]       @relation("AgentFollows")
+  simulationId          Int           @map("simulation_id")
+  simulation            Simulation    @relation(fields: [simulationId], references: [id])
   posts                 Post[]
   replies               Reply[]
   likes                 Like[]
@@ -129,11 +128,13 @@ model Post {
   content     String
   comments    Reply[]
   likes       Like[]
-  isRepost    Boolean     @map("is_repost")
-  repostCount Int         @default(0) @map("repost_count")
+  isRepost    Boolean?    @map("is_repost")
+  repostCount Int?        @default(0) @map("repost_count")
   ownerId     Int         @map("owner_id")
   owner       Agent       @relation(fields: [ownerId], references: [id], onDelete: Cascade)
   generation  Generation?
+  simulationId Int        @map("simulation_id")
+  simulation   Simulation @relation(fields: [simulationId], references: [id])
 
   @@map("posts")
 }
