@@ -55,6 +55,7 @@ const bootApp = async () => {
       password: fastify.env.REDIS_PASS,
       port: fastify.env.REDIS_PORT,
     });
+
     fastify.register(fastifyGracefulShutdown).after(() => {
       fastify.gracefulShutdown((signal, next) => {
         fastify.log.info('Received signal to shutdown: %s', signal);
