@@ -1,15 +1,14 @@
 {
- "extends": "fastify-tsconfig",
- "compilerOptions": {
+  "extends": "fastify-tsconfig",
+  "compilerOptions": {
     "outDir": "dist",
     "declarationMap": true,
     "composite": true,
     "baseUrl": ".",
     "paths": {
-      "@/*": ["./src/*"]
+      "@/*": ["./src/*"],
+      "@root/schema/*": ["../packages/schemas/src/*"]
     }
- },
- "include": [
-    "src/**/*.ts"
- ],
+  },
+  "include": ["src/**/*.ts"]
 }
