@@ -14,5 +14,9 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "prettier": "@ardasevinc/prettier-config"
+  "prettier": "@ardasevinc/prettier-config",
+  "devDependencies": {
+    "@sinclair/typebox": "^0.32.32",
+    "typescript": "^5"
+  }
 }
