@@ -1,6 +1,6 @@
-import { Type } from '@sinclair/typebox';
+import { Type } from "@sinclair/typebox";
 
-import { _Nullable } from './__nullable__.js';
+import { _Nullable } from "./__nullable__";
 
 export const LocationPlain = Type.Object({
   id: Type.Integer(),
@@ -19,10 +19,8 @@ export const LocationRelations = Type.Object({
       updated: Type.Date(),
       name: Type.String(),
       time: Type.Date(),
-      globalImportanceScore: Type.Integer(),
-      localImportanceScore: Type.Integer(),
+      importanceScore: Type.Integer(),
       simulationId: Type.Integer(),
-      isGlobal: Type.Boolean(),
       locationId: _Nullable(Type.Integer()),
     }),
   ),
@@ -36,6 +34,7 @@ export const LocationRelations = Type.Object({
       timezone: Type.String(),
       prompt: _Nullable(Type.String()),
       engagementProbability: _Nullable(Type.Number()),
+      simulationId: Type.Integer(),
       locationId: _Nullable(Type.Integer()),
     }),
   ),
@@ -50,15 +49,15 @@ export const LocationWhere = Type.Union([
   Type.Composite([
     Type.Pick(
       Type.Required(
-        Type.Composite([Type.Object({}), Type.Pick(LocationPlain, ['id'])]),
+        Type.Composite([Type.Object({}), Type.Pick(LocationPlain, ["id"])]),
       ),
-      ['id'],
+      ["id"],
     ),
     Type.Omit(
       Type.Partial(
-        Type.Composite([Type.Object({}), Type.Pick(LocationPlain, ['id'])]),
+        Type.Composite([Type.Object({}), Type.Pick(LocationPlain, ["id"])]),
       ),
-      ['id'],
+      ["id"],
     ),
   ]),
 ]);

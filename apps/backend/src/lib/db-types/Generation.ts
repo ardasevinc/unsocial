@@ -1,6 +1,6 @@
-import { Type } from '@sinclair/typebox';
+import { Type } from "@sinclair/typebox";
 
-import { _Nullable } from './__nullable__.js';
+import { _Nullable } from "./__nullable__";
 
 export const GenerationPlain = Type.Object({
   id: Type.String(),
@@ -27,9 +27,10 @@ export const GenerationRelations = Type.Object({
       created: Type.Date(),
       updated: Type.Date(),
       content: Type.String(),
-      isRepost: Type.Boolean(),
-      repostCount: Type.Integer(),
+      isRepost: _Nullable(Type.Boolean()),
+      repostCount: _Nullable(Type.Integer()),
       ownerId: Type.Integer(),
+      simulationId: Type.Integer(),
     }),
   ),
   reply: Type.Object({
@@ -57,19 +58,19 @@ export const GenerationWhere = Type.Union([
       Type.Required(
         Type.Composite([
           Type.Object({}),
-          Type.Pick(GenerationPlain, ['id', 'postId', 'replyId']),
+          Type.Pick(GenerationPlain, ["id", "postId", "replyId"]),
         ]),
       ),
-      ['id'],
+      ["id"],
     ),
     Type.Omit(
       Type.Partial(
         Type.Composite([
           Type.Object({}),
-          Type.Pick(GenerationPlain, ['id', 'postId', 'replyId']),
+          Type.Pick(GenerationPlain, ["id", "postId", "replyId"]),
         ]),
       ),
-      ['id'],
+      ["id"],
     ),
   ]),
   Type.Composite([
@@ -77,19 +78,19 @@ export const GenerationWhere = Type.Union([
       Type.Required(
         Type.Composite([
           Type.Object({}),
-          Type.Pick(GenerationPlain, ['id', 'postId', 'replyId']),
+          Type.Pick(GenerationPlain, ["id", "postId", "replyId"]),
         ]),
       ),
-      ['postId'],
+      ["postId"],
     ),
     Type.Omit(
       Type.Partial(
         Type.Composite([
           Type.Object({}),
-          Type.Pick(GenerationPlain, ['id', 'postId', 'replyId']),
+          Type.Pick(GenerationPlain, ["id", "postId", "replyId"]),
         ]),
       ),
-      ['postId'],
+      ["postId"],
     ),
   ]),
   Type.Composite([
@@ -97,19 +98,19 @@ export const GenerationWhere = Type.Union([
       Type.Required(
         Type.Composite([
           Type.Object({}),
-          Type.Pick(GenerationPlain, ['id', 'postId', 'replyId']),
+          Type.Pick(GenerationPlain, ["id", "postId", "replyId"]),
         ]),
       ),
-      ['replyId'],
+      ["replyId"],
     ),
     Type.Omit(
       Type.Partial(
         Type.Composite([
           Type.Object({}),
-          Type.Pick(GenerationPlain, ['id', 'postId', 'replyId']),
+          Type.Pick(GenerationPlain, ["id", "postId", "replyId"]),
         ]),
       ),
-      ['replyId'],
+      ["replyId"],
     ),
   ]),
 ]);

@@ -1,15 +1,16 @@
-import { Type } from '@sinclair/typebox';
+import { Type } from "@sinclair/typebox";
 
-import { _Nullable } from './__nullable__.js';
+import { _Nullable } from "./__nullable__";
 
 export const PostPlain = Type.Object({
   id: Type.Integer(),
   created: Type.Date(),
   updated: Type.Date(),
   content: Type.String(),
-  isRepost: Type.Boolean(),
-  repostCount: Type.Integer(),
+  isRepost: _Nullable(Type.Boolean()),
+  repostCount: _Nullable(Type.Integer()),
   ownerId: Type.Integer(),
+  simulationId: Type.Integer(),
 });
 
 export const PostRelations = Type.Object({
@@ -43,6 +44,7 @@ export const PostRelations = Type.Object({
     timezone: Type.String(),
     prompt: _Nullable(Type.String()),
     engagementProbability: _Nullable(Type.Number()),
+    simulationId: Type.Integer(),
     locationId: _Nullable(Type.Integer()),
   }),
   generation: _Nullable(
@@ -54,6 +56,14 @@ export const PostRelations = Type.Object({
       replyId: Type.Integer(),
     }),
   ),
+  simulation: Type.Object({
+    id: Type.Integer(),
+    created: Type.Date(),
+    updated: Type.Date(),
+    end: Type.Date(),
+    currentTime: Type.Date(),
+    chaos: Type.Integer(),
+  }),
 });
 
 export const Post = Type.Composite([PostPlain, PostRelations], {
@@ -65,15 +75,15 @@ export const PostWhere = Type.Union([
   Type.Composite([
     Type.Pick(
       Type.Required(
-        Type.Composite([Type.Object({}), Type.Pick(PostPlain, ['id'])]),
+        Type.Composite([Type.Object({}), Type.Pick(PostPlain, ["id"])]),
       ),
-      ['id'],
+      ["id"],
     ),
     Type.Omit(
       Type.Partial(
-        Type.Composite([Type.Object({}), Type.Pick(PostPlain, ['id'])]),
+        Type.Composite([Type.Object({}), Type.Pick(PostPlain, ["id"])]),
       ),
-      ['id'],
+      ["id"],
     ),
   ]),
 ]);
@@ -82,11 +92,14 @@ export const PostDataPlain = Type.Object({
   created: Type.Date(),
   updated: Type.Date(),
   content: Type.String(),
-  isRepost: Type.Boolean(),
-  repostCount: Type.Integer(),
+  isRepost: Type.Optional(_Nullable(Type.Boolean())),
+  repostCount: Type.Optional(_Nullable(Type.Integer())),
 });
 
-export const PostDataRelations = Type.Object({ ownerId: Type.Integer() });
+export const PostDataRelations = Type.Object({
+  ownerId: Type.Integer(),
+  simulationId: Type.Integer(),
+});
 
 export const PostData = Type.Composite([PostDataPlain, PostDataRelations], {
   description: `Composition of PostDataPlain, PostDataRelations`,
@@ -97,12 +110,13 @@ export const PostDataPlainOptional = Type.Object({
   created: Type.Optional(Type.Date()),
   updated: Type.Optional(Type.Date()),
   content: Type.Optional(Type.String()),
-  isRepost: Type.Optional(Type.Boolean()),
-  repostCount: Type.Optional(Type.Integer()),
+  isRepost: Type.Optional(_Nullable(Type.Boolean())),
+  repostCount: Type.Optional(_Nullable(Type.Integer())),
 });
 
 export const PostDataRelationsOptional = Type.Object({
   ownerId: Type.Optional(Type.Integer()),
+  simulationId: Type.Optional(Type.Integer()),
 });
 
 export const PostDataOptional = Type.Composite(

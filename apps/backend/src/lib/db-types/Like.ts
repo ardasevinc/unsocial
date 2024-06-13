@@ -1,6 +1,6 @@
-import { Type } from '@sinclair/typebox';
+import { Type } from "@sinclair/typebox";
 
-import { _Nullable } from './__nullable__.js';
+import { _Nullable } from "./__nullable__";
 
 export const LikePlain = Type.Object({
   id: Type.Integer(),
@@ -17,9 +17,10 @@ export const LikeRelations = Type.Object({
     created: Type.Date(),
     updated: Type.Date(),
     content: Type.String(),
-    isRepost: Type.Boolean(),
-    repostCount: Type.Integer(),
+    isRepost: _Nullable(Type.Boolean()),
+    repostCount: _Nullable(Type.Integer()),
     ownerId: Type.Integer(),
+    simulationId: Type.Integer(),
   }),
   agent: Type.Object({
     id: Type.Integer(),
@@ -30,6 +31,7 @@ export const LikeRelations = Type.Object({
     timezone: Type.String(),
     prompt: _Nullable(Type.String()),
     engagementProbability: _Nullable(Type.Number()),
+    simulationId: Type.Integer(),
     locationId: _Nullable(Type.Integer()),
   }),
   reply: Type.Object({
@@ -52,15 +54,15 @@ export const LikeWhere = Type.Union([
   Type.Composite([
     Type.Pick(
       Type.Required(
-        Type.Composite([Type.Object({}), Type.Pick(LikePlain, ['id'])]),
+        Type.Composite([Type.Object({}), Type.Pick(LikePlain, ["id"])]),
       ),
-      ['id'],
+      ["id"],
     ),
     Type.Omit(
       Type.Partial(
-        Type.Composite([Type.Object({}), Type.Pick(LikePlain, ['id'])]),
+        Type.Composite([Type.Object({}), Type.Pick(LikePlain, ["id"])]),
       ),
-      ['id'],
+      ["id"],
     ),
   ]),
 ]);

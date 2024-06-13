@@ -1,6 +1,6 @@
-import { Type } from '@sinclair/typebox';
+import { Type } from "@sinclair/typebox";
 
-import { _Nullable } from './__nullable__.js';
+import { _Nullable } from "./__nullable__";
 
 export const LLMUsagePlain = Type.Object({
   id: Type.Integer(),
@@ -32,19 +32,19 @@ export const LLMUsageWhere = Type.Union([
       Type.Required(
         Type.Composite([
           Type.Object({}),
-          Type.Pick(LLMUsagePlain, ['id', 'generationId']),
+          Type.Pick(LLMUsagePlain, ["id", "generationId"]),
         ]),
       ),
-      ['id'],
+      ["id"],
     ),
     Type.Omit(
       Type.Partial(
         Type.Composite([
           Type.Object({}),
-          Type.Pick(LLMUsagePlain, ['id', 'generationId']),
+          Type.Pick(LLMUsagePlain, ["id", "generationId"]),
         ]),
       ),
-      ['id'],
+      ["id"],
     ),
   ]),
   Type.Composite([
@@ -52,19 +52,19 @@ export const LLMUsageWhere = Type.Union([
       Type.Required(
         Type.Composite([
           Type.Object({}),
-          Type.Pick(LLMUsagePlain, ['id', 'generationId']),
+          Type.Pick(LLMUsagePlain, ["id", "generationId"]),
         ]),
       ),
-      ['generationId'],
+      ["generationId"],
     ),
     Type.Omit(
       Type.Partial(
         Type.Composite([
           Type.Object({}),
-          Type.Pick(LLMUsagePlain, ['id', 'generationId']),
+          Type.Pick(LLMUsagePlain, ["id", "generationId"]),
         ]),
       ),
-      ['generationId'],
+      ["generationId"],
     ),
   ]),
 ]);

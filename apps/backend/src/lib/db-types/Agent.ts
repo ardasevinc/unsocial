@@ -1,6 +1,6 @@
 import { Type } from "@sinclair/typebox";
 
-import { _Nullable } from "./__nullable__.js";
+import { _Nullable } from "./__nullable__";
 
 export const AgentPlain = Type.Object({
   id: Type.Integer(),
@@ -11,46 +11,30 @@ export const AgentPlain = Type.Object({
   timezone: Type.String(),
   prompt: _Nullable(Type.String()),
   engagementProbability: _Nullable(Type.Number()),
+  simulationId: Type.Integer(),
   locationId: _Nullable(Type.Integer()),
 });
 
 export const AgentRelations = Type.Object({
   type: Type.Union([Type.Literal("AI"), Type.Literal("HUMAN")]),
-  followedBy: Type.Array(
-    Type.Object({
-      id: Type.Integer(),
-      created: Type.Date(),
-      updated: Type.Date(),
-      displayName: Type.String(),
-      username: Type.String(),
-      timezone: Type.String(),
-      prompt: _Nullable(Type.String()),
-      engagementProbability: _Nullable(Type.Number()),
-      locationId: _Nullable(Type.Integer()),
-    }),
-  ),
-  following: Type.Array(
-    Type.Object({
-      id: Type.Integer(),
-      created: Type.Date(),
-      updated: Type.Date(),
-      displayName: Type.String(),
-      username: Type.String(),
-      timezone: Type.String(),
-      prompt: _Nullable(Type.String()),
-      engagementProbability: _Nullable(Type.Number()),
-      locationId: _Nullable(Type.Integer()),
-    }),
-  ),
+  simulation: Type.Object({
+    id: Type.Integer(),
+    created: Type.Date(),
+    updated: Type.Date(),
+    end: Type.Date(),
+    currentTime: Type.Date(),
+    chaos: Type.Integer(),
+  }),
   posts: Type.Array(
     Type.Object({
       id: Type.Integer(),
       created: Type.Date(),
       updated: Type.Date(),
       content: Type.String(),
-      isRepost: Type.Boolean(),
-      repostCount: Type.Integer(),
+      isRepost: _Nullable(Type.Boolean()),
+      repostCount: _Nullable(Type.Integer()),
       ownerId: Type.Integer(),
+      simulationId: Type.Integer(),
     }),
   ),
   replies: Type.Array(
@@ -154,6 +138,7 @@ export const AgentDataPlain = Type.Object({
 });
 
 export const AgentDataRelations = Type.Object({
+  simulationId: Type.Integer(),
   locationId: Type.Optional(_Nullable(Type.Integer())),
 });
 
@@ -174,6 +159,7 @@ export const AgentDataPlainOptional = Type.Object({
 });
 
 export const AgentDataRelationsOptional = Type.Object({
+  simulationId: Type.Optional(Type.Integer()),
   locationId: Type.Optional(_Nullable(Type.Integer())),
 });
 
