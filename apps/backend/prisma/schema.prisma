@@ -31,6 +31,7 @@ model Simulation {
   currentTime      DateTime          @map("current_time")
   chaos            Int
   simulationStatus SimulationStatus  @default(CREATED) @map("simulation_status")
+  generations      Generation[]
   agents           Agent[]
   posts            Post[]
   events           SimulationEvent[]
@@ -174,6 +175,8 @@ model Generation {
   created DateTime
   model   String
   usage   LLMUsage?
+  simulationId Int @map("simulation_id")
+  simulation Simulation @relation(fields: [simulationId], references: [id])
   post    Post?     @relation(fields: [postId], references: [id])
   postId  BigInt?   @unique @map("post_id")
   reply   Reply     @relation(fields: [replyId], references: [id])
