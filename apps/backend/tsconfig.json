@@ -4,6 +4,7 @@
     "outDir": "dist",
     "declarationMap": true,
     "composite": true,
+    "noEmitOnError": false,
     "baseUrl": ".",
     "paths": {
       "@/*": ["./src/*"],
