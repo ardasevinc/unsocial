@@ -31,6 +31,7 @@ model Simulation {
   end              DateTime          @map("simulation_end")
   currentTime      DateTime          @map("current_time")
   chaos            Int
+  seedPrompt       String            @map("seed_prompt")
   simulationStatus SimulationStatus  @default(CREATED) @map("simulation_status")
   generations      Generation[]
   agents           Agent[]

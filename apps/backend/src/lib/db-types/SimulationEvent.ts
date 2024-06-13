@@ -41,6 +41,7 @@ export const SimulationEventRelations = Type.Object(
         end: Type.Date({ additionalProperties: false }),
         currentTime: Type.Date({ additionalProperties: false }),
         chaos: Type.Integer({ additionalProperties: false }),
+        seedPrompt: Type.String({ additionalProperties: false }),
         simulationStatus: Type.Union(
           [
             Type.Literal("CREATED"),

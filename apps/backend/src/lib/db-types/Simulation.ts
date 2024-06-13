@@ -10,6 +10,7 @@ export const SimulationPlain = Type.Object(
     end: Type.Date({ additionalProperties: false }),
     currentTime: Type.Date({ additionalProperties: false }),
     chaos: Type.Integer({ additionalProperties: false }),
+    seedPrompt: Type.String({ additionalProperties: false }),
     simulationStatus: Type.Union(
       [
         Type.Literal("CREATED"),
@@ -120,6 +121,7 @@ export const SimulationPlainInput = Type.Object(
     end: Type.Date({ additionalProperties: false }),
     currentTime: Type.Date({ additionalProperties: false }),
     chaos: Type.Integer({ additionalProperties: false }),
+    seedPrompt: Type.String({ additionalProperties: false }),
     simulationStatus: Type.Union(
       [
         Type.Literal("CREATED"),
@@ -337,6 +339,7 @@ export const SimulationWhere = Type.Partial(
           end: Type.Date({ additionalProperties: false }),
           currentTime: Type.Date({ additionalProperties: false }),
           chaos: Type.Integer({ additionalProperties: false }),
+          seedPrompt: Type.String({ additionalProperties: false }),
           simulationStatus: Type.Union(
             [
               Type.Literal("CREATED"),
@@ -391,6 +394,7 @@ export const SimulationWhereUnique = Type.Recursive(
             end: Type.Date({ additionalProperties: false }),
             currentTime: Type.Date({ additionalProperties: false }),
             chaos: Type.Integer({ additionalProperties: false }),
+            seedPrompt: Type.String({ additionalProperties: false }),
             simulationStatus: Type.Union(
               [
                 Type.Literal("CREATED"),
