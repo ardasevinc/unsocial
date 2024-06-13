@@ -1,99 +1,271 @@
 import { Type } from "@sinclair/typebox";
 
-import { _Nullable } from "./__nullable__";
+import { Nullable } from "./Nullable";
 
-export const LocationPlain = Type.Object({
-  id: Type.Integer(),
-  created: Type.Date(),
-  updated: Type.Date(),
-  name: Type.String(),
-  country: _Nullable(Type.String()),
-  city: _Nullable(Type.String()),
-});
+export const LocationPlain = Type.Object(
+  {
+    id: Type.Integer({ additionalProperties: false }),
+    created: Type.Date({ additionalProperties: false }),
+    updated: Type.Date({ additionalProperties: false }),
+    name: Type.String({ additionalProperties: false }),
+    country: Nullable(Type.String({ additionalProperties: false })),
+    city: Nullable(Type.String({ additionalProperties: false })),
+  },
+  { additionalProperties: false },
+);
 
-export const LocationRelations = Type.Object({
-  events: Type.Array(
-    Type.Object({
-      id: Type.Integer(),
-      created: Type.Date(),
-      updated: Type.Date(),
-      name: Type.String(),
-      time: Type.Date(),
-      importanceScore: Type.Integer(),
-      simulationId: Type.Integer(),
-      locationId: _Nullable(Type.Integer()),
-    }),
+export const LocationRelations = Type.Object(
+  {
+    events: Type.Array(
+      Type.Object(
+        {
+          id: Type.Integer({ additionalProperties: false }),
+          created: Type.Date({ additionalProperties: false }),
+          updated: Type.Date({ additionalProperties: false }),
+          name: Type.String({ additionalProperties: false }),
+          type: Type.Union(
+            [
+              Type.Literal("POLITICAL"),
+              Type.Literal("ECONOMIC"),
+              Type.Literal("SOCIAL"),
+              Type.Literal("TECHNOLOGICAL"),
+              Type.Literal("ENVIRONMENTAL"),
+              Type.Literal("ENTERTAINMENT"),
+              Type.Literal("LEGAL"),
+              Type.Literal("GLOBAL"),
+              Type.Literal("SPORTS"),
+              Type.Literal("SCIENCE"),
+            ],
+            { additionalProperties: false },
+          ),
+          time: Type.Date({ additionalProperties: false }),
+          importanceScore: Type.Integer({ additionalProperties: false }),
+          simulationId: Type.Integer({ additionalProperties: false }),
+          locationId: Nullable(Type.Integer({ additionalProperties: false })),
+        },
+        { additionalProperties: false },
+      ),
+      { additionalProperties: false },
+    ),
+    agents: Type.Array(
+      Type.Object(
+        {
+          id: Type.Integer({ additionalProperties: false }),
+          created: Type.Date({ additionalProperties: false }),
+          updated: Type.Date({ additionalProperties: false }),
+          type: Type.Union([Type.Literal("AI"), Type.Literal("HUMAN")], {
+            additionalProperties: false,
+          }),
+          displayName: Type.String({ additionalProperties: false }),
+          username: Type.String({ additionalProperties: false }),
+          timezone: Type.String({ additionalProperties: false }),
+          prompt: Nullable(Type.String({ additionalProperties: false })),
+          engagementProbability: Nullable(
+            Type.Number({ additionalProperties: false }),
+          ),
+          simulationId: Type.Integer({ additionalProperties: false }),
+          locationId: Nullable(Type.Integer({ additionalProperties: false })),
+        },
+        { additionalProperties: false },
+      ),
+      { additionalProperties: false },
+    ),
+  },
+  { additionalProperties: false },
+);
+
+export const LocationPlainInput = Type.Object(
+  {
+    created: Type.Date({ additionalProperties: false }),
+    name: Type.String({ additionalProperties: false }),
+    country: Nullable(Type.String({ additionalProperties: false })),
+    city: Nullable(Type.String({ additionalProperties: false })),
+  },
+  { additionalProperties: false },
+);
+
+export const LocationRelationsInputCreate = Type.Object(
+  {
+    events: Type.Optional(
+      Type.Object(
+        {
+          connect: Type.Array(
+            Type.Object(
+              {
+                id: Type.String({ additionalProperties: false }),
+              },
+              { additionalProperties: false },
+            ),
+            { additionalProperties: false },
+          ),
+        },
+        { additionalProperties: false },
+      ),
+    ),
+    agents: Type.Optional(
+      Type.Object(
+        {
+          connect: Type.Array(
+            Type.Object(
+              {
+                id: Type.String({ additionalProperties: false }),
+              },
+              { additionalProperties: false },
+            ),
+            { additionalProperties: false },
+          ),
+        },
+        { additionalProperties: false },
+      ),
+    ),
+  },
+  { additionalProperties: false },
+);
+
+export const LocationRelationsInputUpdate = Type.Partial(
+  Type.Object(
+    {
+      events: Type.Partial(
+        Type.Object(
+          {
+            connect: Type.Array(
+              Type.Object(
+                {
+                  id: Type.String({ additionalProperties: false }),
+                },
+                { additionalProperties: false },
+              ),
+              { additionalProperties: false },
+            ),
+            disconnect: Type.Array(
+              Type.Object(
+                {
+                  id: Type.String({ additionalProperties: false }),
+                },
+                { additionalProperties: false },
+              ),
+              { additionalProperties: false },
+            ),
+          },
+          { additionalProperties: false },
+        ),
+        { additionalProperties: false },
+      ),
+      agents: Type.Partial(
+        Type.Object(
+          {
+            connect: Type.Array(
+              Type.Object(
+                {
+                  id: Type.String({ additionalProperties: false }),
+                },
+                { additionalProperties: false },
+              ),
+              { additionalProperties: false },
+            ),
+            disconnect: Type.Array(
+              Type.Object(
+                {
+                  id: Type.String({ additionalProperties: false }),
+                },
+                { additionalProperties: false },
+              ),
+              { additionalProperties: false },
+            ),
+          },
+          { additionalProperties: false },
+        ),
+        { additionalProperties: false },
+      ),
+    },
+    { additionalProperties: false },
   ),
-  agents: Type.Array(
-    Type.Object({
-      id: Type.Integer(),
-      created: Type.Date(),
-      updated: Type.Date(),
-      displayName: Type.String(),
-      username: Type.String(),
-      timezone: Type.String(),
-      prompt: _Nullable(Type.String()),
-      engagementProbability: _Nullable(Type.Number()),
-      simulationId: Type.Integer(),
-      locationId: _Nullable(Type.Integer()),
-    }),
+  { additionalProperties: false },
+);
+
+export const LocationWhere = Type.Partial(
+  Type.Recursive(
+    (Self) =>
+      Type.Object(
+        {
+          AND: Type.Union([
+            Self,
+            Type.Array(Self, { additionalProperties: false }),
+          ]),
+          NOT: Type.Union([
+            Self,
+            Type.Array(Self, { additionalProperties: false }),
+          ]),
+          OR: Type.Array(Self, { additionalProperties: false }),
+          id: Type.Integer({ additionalProperties: false }),
+          created: Type.Date({ additionalProperties: false }),
+          updated: Type.Date({ additionalProperties: false }),
+          name: Type.String({ additionalProperties: false }),
+          country: Type.String({ additionalProperties: false }),
+          city: Type.String({ additionalProperties: false }),
+        },
+        { additionalProperties: false },
+      ),
+    { $id: "Location" },
   ),
-});
+  { additionalProperties: false },
+);
+
+export const LocationWhereUnique = Type.Recursive(
+  (Self) =>
+    Type.Intersect(
+      [
+        Type.Partial(
+          Type.Object(
+            { id: Type.Integer({ additionalProperties: false }) },
+            { additionalProperties: false },
+          ),
+          { additionalProperties: false },
+        ),
+        Type.Union(
+          [Type.Object({ id: Type.Integer({ additionalProperties: false }) })],
+          { additionalProperties: false },
+        ),
+        Type.Partial(
+          Type.Object({
+            AND: Type.Union([
+              Self,
+              Type.Array(Self, { additionalProperties: false }),
+            ]),
+            NOT: Type.Union([
+              Self,
+              Type.Array(Self, { additionalProperties: false }),
+            ]),
+            OR: Type.Array(Self, { additionalProperties: false }),
+          }),
+          { additionalProperties: false },
+        ),
+        Type.Partial(
+          Type.Object({
+            created: Type.Date({ additionalProperties: false }),
+            updated: Type.Date({ additionalProperties: false }),
+            name: Type.String({ additionalProperties: false }),
+            country: Type.String({ additionalProperties: false }),
+            city: Type.String({ additionalProperties: false }),
+          }),
+          { additionalProperties: false },
+        ),
+      ],
+      { additionalProperties: false },
+    ),
+  { $id: "Location" },
+);
 
 export const Location = Type.Composite([LocationPlain, LocationRelations], {
-  description: `Composition of LocationPlain, LocationRelations`,
   additionalProperties: false,
 });
 
-export const LocationWhere = Type.Union([
-  Type.Composite([
-    Type.Pick(
-      Type.Required(
-        Type.Composite([Type.Object({}), Type.Pick(LocationPlain, ["id"])]),
-      ),
-      ["id"],
-    ),
-    Type.Omit(
-      Type.Partial(
-        Type.Composite([Type.Object({}), Type.Pick(LocationPlain, ["id"])]),
-      ),
-      ["id"],
-    ),
-  ]),
-]);
-
-export const LocationDataPlain = Type.Object({
-  created: Type.Date(),
-  updated: Type.Date(),
-  name: Type.String(),
-  country: Type.Optional(_Nullable(Type.String())),
-  city: Type.Optional(_Nullable(Type.String())),
-});
-
-export const LocationDataRelations = Type.Object({});
-
-export const LocationData = Type.Composite(
-  [LocationDataPlain, LocationDataRelations],
-  {
-    description: `Composition of LocationDataPlain, LocationDataRelations`,
-    additionalProperties: false,
-  },
+export const LocationInputCreate = Type.Composite(
+  [LocationPlainInput, LocationRelationsInputCreate],
+  { additionalProperties: false },
 );
 
-export const LocationDataPlainOptional = Type.Object({
-  created: Type.Optional(Type.Date()),
-  updated: Type.Optional(Type.Date()),
-  name: Type.Optional(Type.String()),
-  country: Type.Optional(_Nullable(Type.String())),
-  city: Type.Optional(_Nullable(Type.String())),
-});
-
-export const LocationDataRelationsOptional = Type.Object({});
-
-export const LocationDataOptional = Type.Composite(
-  [LocationDataPlainOptional, LocationDataRelationsOptional],
-  {
-    description: `Composition of LocationDataPlainOptional, LocationDataRelationsOptional`,
-    additionalProperties: false,
-  },
+export const LocationInputUpdate = Type.Composite(
+  [LocationPlainInput, LocationRelationsInputUpdate],
+  { additionalProperties: false },
 );

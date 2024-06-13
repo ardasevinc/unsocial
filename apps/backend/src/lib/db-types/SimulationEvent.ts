@@ -1,146 +1,284 @@
 import { Type } from "@sinclair/typebox";
 
-import { _Nullable } from "./__nullable__";
+import { Nullable } from "./Nullable";
 
-export const SimulationEventPlain = Type.Object({
-  id: Type.Integer(),
-  created: Type.Date(),
-  updated: Type.Date(),
-  name: Type.String(),
-  time: Type.Date(),
-  importanceScore: Type.Integer(),
-  simulationId: Type.Integer(),
-  locationId: _Nullable(Type.Integer()),
-});
+export const SimulationEventPlain = Type.Object(
+  {
+    id: Type.Integer({ additionalProperties: false }),
+    created: Type.Date({ additionalProperties: false }),
+    updated: Type.Date({ additionalProperties: false }),
+    name: Type.String({ additionalProperties: false }),
+    type: Type.Union(
+      [
+        Type.Literal("POLITICAL"),
+        Type.Literal("ECONOMIC"),
+        Type.Literal("SOCIAL"),
+        Type.Literal("TECHNOLOGICAL"),
+        Type.Literal("ENVIRONMENTAL"),
+        Type.Literal("ENTERTAINMENT"),
+        Type.Literal("LEGAL"),
+        Type.Literal("GLOBAL"),
+        Type.Literal("SPORTS"),
+        Type.Literal("SCIENCE"),
+      ],
+      { additionalProperties: false },
+    ),
+    time: Type.Date({ additionalProperties: false }),
+    importanceScore: Type.Integer({ additionalProperties: false }),
+    simulationId: Type.Integer({ additionalProperties: false }),
+    locationId: Nullable(Type.Integer({ additionalProperties: false })),
+  },
+  { additionalProperties: false },
+);
 
-export const SimulationEventRelations = Type.Object({
-  type: Type.Union([
-    Type.Literal("POLITICAL"),
-    Type.Literal("ECONOMIC"),
-    Type.Literal("SOCIAL"),
-    Type.Literal("TECHNOLOGICAL"),
-    Type.Literal("ENVIRONMENTAL"),
-    Type.Literal("ENTERTAINMENT"),
-    Type.Literal("LEGAL"),
-    Type.Literal("GLOBAL"),
-    Type.Literal("SPORTS"),
-    Type.Literal("SCIENCE"),
-  ]),
-  simulation: Type.Object({
-    id: Type.Integer(),
-    created: Type.Date(),
-    updated: Type.Date(),
-    end: Type.Date(),
-    currentTime: Type.Date(),
-    chaos: Type.Integer(),
-  }),
-  location: _Nullable(
-    Type.Object({
-      id: Type.Integer(),
-      created: Type.Date(),
-      updated: Type.Date(),
-      name: Type.String(),
-      country: _Nullable(Type.String()),
-      city: _Nullable(Type.String()),
-    }),
+export const SimulationEventRelations = Type.Object(
+  {
+    simulation: Type.Object(
+      {
+        id: Type.Integer({ additionalProperties: false }),
+        created: Type.Date({ additionalProperties: false }),
+        updated: Type.Date({ additionalProperties: false }),
+        end: Type.Date({ additionalProperties: false }),
+        currentTime: Type.Date({ additionalProperties: false }),
+        chaos: Type.Integer({ additionalProperties: false }),
+        simulationStatus: Type.Union(
+          [
+            Type.Literal("CREATED"),
+            Type.Literal("QUEUED"),
+            Type.Literal("RUNNING"),
+            Type.Literal("PAUSED"),
+            Type.Literal("FINISHED"),
+          ],
+          { additionalProperties: false },
+        ),
+      },
+      { additionalProperties: false },
+    ),
+    location: Nullable(
+      Type.Object(
+        {
+          id: Type.Integer({ additionalProperties: false }),
+          created: Type.Date({ additionalProperties: false }),
+          updated: Type.Date({ additionalProperties: false }),
+          name: Type.String({ additionalProperties: false }),
+          country: Nullable(Type.String({ additionalProperties: false })),
+          city: Nullable(Type.String({ additionalProperties: false })),
+        },
+        { additionalProperties: false },
+      ),
+    ),
+  },
+  { additionalProperties: false },
+);
+
+export const SimulationEventPlainInput = Type.Object(
+  {
+    created: Type.Date({ additionalProperties: false }),
+    name: Type.String({ additionalProperties: false }),
+    type: Type.Union(
+      [
+        Type.Literal("POLITICAL"),
+        Type.Literal("ECONOMIC"),
+        Type.Literal("SOCIAL"),
+        Type.Literal("TECHNOLOGICAL"),
+        Type.Literal("ENVIRONMENTAL"),
+        Type.Literal("ENTERTAINMENT"),
+        Type.Literal("LEGAL"),
+        Type.Literal("GLOBAL"),
+        Type.Literal("SPORTS"),
+        Type.Literal("SCIENCE"),
+      ],
+      { additionalProperties: false },
+    ),
+    time: Type.Date({ additionalProperties: false }),
+    importanceScore: Type.Integer({ additionalProperties: false }),
+  },
+  { additionalProperties: false },
+);
+
+export const SimulationEventRelationsInputCreate = Type.Object(
+  {
+    simulation: Type.Object(
+      {
+        connect: Type.Object(
+          {
+            id: Type.String({ additionalProperties: false }),
+          },
+          { additionalProperties: false },
+        ),
+      },
+      { additionalProperties: false },
+    ),
+    location: Type.Optional(
+      Type.Object(
+        {
+          connect: Type.Object(
+            {
+              id: Type.String({ additionalProperties: false }),
+            },
+            { additionalProperties: false },
+          ),
+        },
+        { additionalProperties: false },
+      ),
+    ),
+  },
+  { additionalProperties: false },
+);
+
+export const SimulationEventRelationsInputUpdate = Type.Partial(
+  Type.Object(
+    {
+      simulation: Type.Object(
+        {
+          connect: Type.Object(
+            {
+              id: Type.String({ additionalProperties: false }),
+            },
+            { additionalProperties: false },
+          ),
+        },
+        { additionalProperties: false },
+      ),
+      location: Type.Partial(
+        Type.Object(
+          {
+            connect: Type.Object(
+              {
+                id: Type.String({ additionalProperties: false }),
+              },
+              { additionalProperties: false },
+            ),
+            disconnect: Type.Boolean(),
+          },
+          { additionalProperties: false },
+        ),
+        { additionalProperties: false },
+      ),
+    },
+    { additionalProperties: false },
   ),
-});
+  { additionalProperties: false },
+);
+
+export const SimulationEventWhere = Type.Partial(
+  Type.Recursive(
+    (Self) =>
+      Type.Object(
+        {
+          AND: Type.Union([
+            Self,
+            Type.Array(Self, { additionalProperties: false }),
+          ]),
+          NOT: Type.Union([
+            Self,
+            Type.Array(Self, { additionalProperties: false }),
+          ]),
+          OR: Type.Array(Self, { additionalProperties: false }),
+          id: Type.Integer({ additionalProperties: false }),
+          created: Type.Date({ additionalProperties: false }),
+          updated: Type.Date({ additionalProperties: false }),
+          name: Type.String({ additionalProperties: false }),
+          type: Type.Union(
+            [
+              Type.Literal("POLITICAL"),
+              Type.Literal("ECONOMIC"),
+              Type.Literal("SOCIAL"),
+              Type.Literal("TECHNOLOGICAL"),
+              Type.Literal("ENVIRONMENTAL"),
+              Type.Literal("ENTERTAINMENT"),
+              Type.Literal("LEGAL"),
+              Type.Literal("GLOBAL"),
+              Type.Literal("SPORTS"),
+              Type.Literal("SCIENCE"),
+            ],
+            { additionalProperties: false },
+          ),
+          time: Type.Date({ additionalProperties: false }),
+          importanceScore: Type.Integer({ additionalProperties: false }),
+          simulationId: Type.Integer({ additionalProperties: false }),
+          locationId: Type.Integer({ additionalProperties: false }),
+        },
+        { additionalProperties: false },
+      ),
+    { $id: "SimulationEvent" },
+  ),
+  { additionalProperties: false },
+);
+
+export const SimulationEventWhereUnique = Type.Recursive(
+  (Self) =>
+    Type.Intersect(
+      [
+        Type.Partial(
+          Type.Object(
+            { id: Type.Integer({ additionalProperties: false }) },
+            { additionalProperties: false },
+          ),
+          { additionalProperties: false },
+        ),
+        Type.Union(
+          [Type.Object({ id: Type.Integer({ additionalProperties: false }) })],
+          { additionalProperties: false },
+        ),
+        Type.Partial(
+          Type.Object({
+            AND: Type.Union([
+              Self,
+              Type.Array(Self, { additionalProperties: false }),
+            ]),
+            NOT: Type.Union([
+              Self,
+              Type.Array(Self, { additionalProperties: false }),
+            ]),
+            OR: Type.Array(Self, { additionalProperties: false }),
+          }),
+          { additionalProperties: false },
+        ),
+        Type.Partial(
+          Type.Object({
+            created: Type.Date({ additionalProperties: false }),
+            updated: Type.Date({ additionalProperties: false }),
+            name: Type.String({ additionalProperties: false }),
+            type: Type.Union(
+              [
+                Type.Literal("POLITICAL"),
+                Type.Literal("ECONOMIC"),
+                Type.Literal("SOCIAL"),
+                Type.Literal("TECHNOLOGICAL"),
+                Type.Literal("ENVIRONMENTAL"),
+                Type.Literal("ENTERTAINMENT"),
+                Type.Literal("LEGAL"),
+                Type.Literal("GLOBAL"),
+                Type.Literal("SPORTS"),
+                Type.Literal("SCIENCE"),
+              ],
+              { additionalProperties: false },
+            ),
+            time: Type.Date({ additionalProperties: false }),
+            importanceScore: Type.Integer({ additionalProperties: false }),
+            simulationId: Type.Integer({ additionalProperties: false }),
+            locationId: Type.Integer({ additionalProperties: false }),
+          }),
+          { additionalProperties: false },
+        ),
+      ],
+      { additionalProperties: false },
+    ),
+  { $id: "SimulationEvent" },
+);
 
 export const SimulationEvent = Type.Composite(
   [SimulationEventPlain, SimulationEventRelations],
-  {
-    description: `Composition of SimulationEventPlain, SimulationEventRelations`,
-    additionalProperties: false,
-  },
+  { additionalProperties: false },
 );
 
-export const SimulationEventWhere = Type.Union([
-  Type.Composite([
-    Type.Pick(
-      Type.Required(
-        Type.Composite([
-          Type.Object({}),
-          Type.Pick(SimulationEventPlain, ["id"]),
-        ]),
-      ),
-      ["id"],
-    ),
-    Type.Omit(
-      Type.Partial(
-        Type.Composite([
-          Type.Object({}),
-          Type.Pick(SimulationEventPlain, ["id"]),
-        ]),
-      ),
-      ["id"],
-    ),
-  ]),
-]);
-
-export const SimulationEventDataPlain = Type.Object({
-  created: Type.Date(),
-  updated: Type.Date(),
-  name: Type.String(),
-  type: Type.Union([
-    Type.Literal("POLITICAL"),
-    Type.Literal("ECONOMIC"),
-    Type.Literal("SOCIAL"),
-    Type.Literal("TECHNOLOGICAL"),
-    Type.Literal("ENVIRONMENTAL"),
-    Type.Literal("ENTERTAINMENT"),
-    Type.Literal("LEGAL"),
-    Type.Literal("GLOBAL"),
-    Type.Literal("SPORTS"),
-    Type.Literal("SCIENCE"),
-  ]),
-  time: Type.Date(),
-  importanceScore: Type.Integer(),
-});
-
-export const SimulationEventDataRelations = Type.Object({
-  simulationId: Type.Integer(),
-  locationId: Type.Optional(_Nullable(Type.Integer())),
-});
-
-export const SimulationEventData = Type.Composite(
-  [SimulationEventDataPlain, SimulationEventDataRelations],
-  {
-    description: `Composition of SimulationEventDataPlain, SimulationEventDataRelations`,
-    additionalProperties: false,
-  },
+export const SimulationEventInputCreate = Type.Composite(
+  [SimulationEventPlainInput, SimulationEventRelationsInputCreate],
+  { additionalProperties: false },
 );
 
-export const SimulationEventDataPlainOptional = Type.Object({
-  created: Type.Optional(Type.Date()),
-  updated: Type.Optional(Type.Date()),
-  name: Type.Optional(Type.String()),
-  type: Type.Optional(
-    Type.Union([
-      Type.Literal("POLITICAL"),
-      Type.Literal("ECONOMIC"),
-      Type.Literal("SOCIAL"),
-      Type.Literal("TECHNOLOGICAL"),
-      Type.Literal("ENVIRONMENTAL"),
-      Type.Literal("ENTERTAINMENT"),
-      Type.Literal("LEGAL"),
-      Type.Literal("GLOBAL"),
-      Type.Literal("SPORTS"),
-      Type.Literal("SCIENCE"),
-    ]),
-  ),
-  time: Type.Optional(Type.Date()),
-  importanceScore: Type.Optional(Type.Integer()),
-});
-
-export const SimulationEventDataRelationsOptional = Type.Object({
-  simulationId: Type.Optional(Type.Integer()),
-  locationId: Type.Optional(_Nullable(Type.Integer())),
-});
-
-export const SimulationEventDataOptional = Type.Composite(
-  [SimulationEventDataPlainOptional, SimulationEventDataRelationsOptional],
-  {
-    description: `Composition of SimulationEventDataPlainOptional, SimulationEventDataRelationsOptional`,
-    additionalProperties: false,
-  },
+export const SimulationEventInputUpdate = Type.Composite(
+  [SimulationEventPlainInput, SimulationEventRelationsInputUpdate],
+  { additionalProperties: false },
 );

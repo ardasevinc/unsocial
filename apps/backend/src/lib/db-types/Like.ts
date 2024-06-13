@@ -1,103 +1,239 @@
 import { Type } from "@sinclair/typebox";
 
-import { _Nullable } from "./__nullable__";
+import { Nullable } from "./Nullable";
 
-export const LikePlain = Type.Object({
-  id: Type.Integer(),
-  created: Type.Date(),
-  updated: Type.Date(),
-  postId: Type.Integer(),
-  agentId: Type.Integer(),
-  replyId: Type.Integer(),
-});
+export const LikePlain = Type.Object(
+  {
+    id: Type.Integer({ additionalProperties: false }),
+    created: Type.Date({ additionalProperties: false }),
+    updated: Type.Date({ additionalProperties: false }),
+    postId: Type.Integer({ additionalProperties: false }),
+    agentId: Type.Integer({ additionalProperties: false }),
+    replyId: Type.Integer({ additionalProperties: false }),
+  },
+  { additionalProperties: false },
+);
 
-export const LikeRelations = Type.Object({
-  post: Type.Object({
-    id: Type.Integer(),
-    created: Type.Date(),
-    updated: Type.Date(),
-    content: Type.String(),
-    isRepost: _Nullable(Type.Boolean()),
-    repostCount: _Nullable(Type.Integer()),
-    ownerId: Type.Integer(),
-    simulationId: Type.Integer(),
-  }),
-  agent: Type.Object({
-    id: Type.Integer(),
-    created: Type.Date(),
-    updated: Type.Date(),
-    displayName: Type.String(),
-    username: Type.String(),
-    timezone: Type.String(),
-    prompt: _Nullable(Type.String()),
-    engagementProbability: _Nullable(Type.Number()),
-    simulationId: Type.Integer(),
-    locationId: _Nullable(Type.Integer()),
-  }),
-  reply: Type.Object({
-    id: Type.Integer(),
-    created: Type.Date(),
-    updated: Type.Date(),
-    content: Type.String(),
-    repostCount: Type.Integer(),
-    postId: Type.Integer(),
-    authorId: Type.Integer(),
-  }),
-});
+export const LikeRelations = Type.Object(
+  {
+    post: Type.Object(
+      {
+        id: Type.Integer({ additionalProperties: false }),
+        created: Type.Date({ additionalProperties: false }),
+        updated: Type.Date({ additionalProperties: false }),
+        content: Type.String({ additionalProperties: false }),
+        isRepost: Nullable(Type.Boolean({ additionalProperties: false })),
+        repostCount: Nullable(Type.Integer({ additionalProperties: false })),
+        ownerId: Type.Integer({ additionalProperties: false }),
+        simulationId: Type.Integer({ additionalProperties: false }),
+      },
+      { additionalProperties: false },
+    ),
+    agent: Type.Object(
+      {
+        id: Type.Integer({ additionalProperties: false }),
+        created: Type.Date({ additionalProperties: false }),
+        updated: Type.Date({ additionalProperties: false }),
+        type: Type.Union([Type.Literal("AI"), Type.Literal("HUMAN")], {
+          additionalProperties: false,
+        }),
+        displayName: Type.String({ additionalProperties: false }),
+        username: Type.String({ additionalProperties: false }),
+        timezone: Type.String({ additionalProperties: false }),
+        prompt: Nullable(Type.String({ additionalProperties: false })),
+        engagementProbability: Nullable(
+          Type.Number({ additionalProperties: false }),
+        ),
+        simulationId: Type.Integer({ additionalProperties: false }),
+        locationId: Nullable(Type.Integer({ additionalProperties: false })),
+      },
+      { additionalProperties: false },
+    ),
+    reply: Type.Object(
+      {
+        id: Type.Integer({ additionalProperties: false }),
+        created: Type.Date({ additionalProperties: false }),
+        updated: Type.Date({ additionalProperties: false }),
+        content: Type.String({ additionalProperties: false }),
+        repostCount: Type.Integer({ additionalProperties: false }),
+        postId: Type.Integer({ additionalProperties: false }),
+        authorId: Type.Integer({ additionalProperties: false }),
+      },
+      { additionalProperties: false },
+    ),
+  },
+  { additionalProperties: false },
+);
+
+export const LikePlainInput = Type.Object(
+  { created: Type.Date({ additionalProperties: false }) },
+  { additionalProperties: false },
+);
+
+export const LikeRelationsInputCreate = Type.Object(
+  {
+    post: Type.Object(
+      {
+        connect: Type.Object(
+          {
+            id: Type.String({ additionalProperties: false }),
+          },
+          { additionalProperties: false },
+        ),
+      },
+      { additionalProperties: false },
+    ),
+    agent: Type.Object(
+      {
+        connect: Type.Object(
+          {
+            id: Type.String({ additionalProperties: false }),
+          },
+          { additionalProperties: false },
+        ),
+      },
+      { additionalProperties: false },
+    ),
+    reply: Type.Object(
+      {
+        connect: Type.Object(
+          {
+            id: Type.String({ additionalProperties: false }),
+          },
+          { additionalProperties: false },
+        ),
+      },
+      { additionalProperties: false },
+    ),
+  },
+  { additionalProperties: false },
+);
+
+export const LikeRelationsInputUpdate = Type.Partial(
+  Type.Object(
+    {
+      post: Type.Object(
+        {
+          connect: Type.Object(
+            {
+              id: Type.String({ additionalProperties: false }),
+            },
+            { additionalProperties: false },
+          ),
+        },
+        { additionalProperties: false },
+      ),
+      agent: Type.Object(
+        {
+          connect: Type.Object(
+            {
+              id: Type.String({ additionalProperties: false }),
+            },
+            { additionalProperties: false },
+          ),
+        },
+        { additionalProperties: false },
+      ),
+      reply: Type.Object(
+        {
+          connect: Type.Object(
+            {
+              id: Type.String({ additionalProperties: false }),
+            },
+            { additionalProperties: false },
+          ),
+        },
+        { additionalProperties: false },
+      ),
+    },
+    { additionalProperties: false },
+  ),
+  { additionalProperties: false },
+);
+
+export const LikeWhere = Type.Partial(
+  Type.Recursive(
+    (Self) =>
+      Type.Object(
+        {
+          AND: Type.Union([
+            Self,
+            Type.Array(Self, { additionalProperties: false }),
+          ]),
+          NOT: Type.Union([
+            Self,
+            Type.Array(Self, { additionalProperties: false }),
+          ]),
+          OR: Type.Array(Self, { additionalProperties: false }),
+          id: Type.Integer({ additionalProperties: false }),
+          created: Type.Date({ additionalProperties: false }),
+          updated: Type.Date({ additionalProperties: false }),
+          postId: Type.Integer({ additionalProperties: false }),
+          agentId: Type.Integer({ additionalProperties: false }),
+          replyId: Type.Integer({ additionalProperties: false }),
+        },
+        { additionalProperties: false },
+      ),
+    { $id: "Like" },
+  ),
+  { additionalProperties: false },
+);
+
+export const LikeWhereUnique = Type.Recursive(
+  (Self) =>
+    Type.Intersect(
+      [
+        Type.Partial(
+          Type.Object(
+            { id: Type.Integer({ additionalProperties: false }) },
+            { additionalProperties: false },
+          ),
+          { additionalProperties: false },
+        ),
+        Type.Union(
+          [Type.Object({ id: Type.Integer({ additionalProperties: false }) })],
+          { additionalProperties: false },
+        ),
+        Type.Partial(
+          Type.Object({
+            AND: Type.Union([
+              Self,
+              Type.Array(Self, { additionalProperties: false }),
+            ]),
+            NOT: Type.Union([
+              Self,
+              Type.Array(Self, { additionalProperties: false }),
+            ]),
+            OR: Type.Array(Self, { additionalProperties: false }),
+          }),
+          { additionalProperties: false },
+        ),
+        Type.Partial(
+          Type.Object({
+            created: Type.Date({ additionalProperties: false }),
+            updated: Type.Date({ additionalProperties: false }),
+            postId: Type.Integer({ additionalProperties: false }),
+            agentId: Type.Integer({ additionalProperties: false }),
+            replyId: Type.Integer({ additionalProperties: false }),
+          }),
+          { additionalProperties: false },
+        ),
+      ],
+      { additionalProperties: false },
+    ),
+  { $id: "Like" },
+);
 
 export const Like = Type.Composite([LikePlain, LikeRelations], {
-  description: `Composition of LikePlain, LikeRelations`,
   additionalProperties: false,
 });
 
-export const LikeWhere = Type.Union([
-  Type.Composite([
-    Type.Pick(
-      Type.Required(
-        Type.Composite([Type.Object({}), Type.Pick(LikePlain, ["id"])]),
-      ),
-      ["id"],
-    ),
-    Type.Omit(
-      Type.Partial(
-        Type.Composite([Type.Object({}), Type.Pick(LikePlain, ["id"])]),
-      ),
-      ["id"],
-    ),
-  ]),
-]);
+export const LikeInputCreate = Type.Composite(
+  [LikePlainInput, LikeRelationsInputCreate],
+  { additionalProperties: false },
+);
 
-export const LikeDataPlain = Type.Object({
-  created: Type.Date(),
-  updated: Type.Date(),
-});
-
-export const LikeDataRelations = Type.Object({
-  postId: Type.Integer(),
-  agentId: Type.Integer(),
-  replyId: Type.Integer(),
-});
-
-export const LikeData = Type.Composite([LikeDataPlain, LikeDataRelations], {
-  description: `Composition of LikeDataPlain, LikeDataRelations`,
-  additionalProperties: false,
-});
-
-export const LikeDataPlainOptional = Type.Object({
-  created: Type.Optional(Type.Date()),
-  updated: Type.Optional(Type.Date()),
-});
-
-export const LikeDataRelationsOptional = Type.Object({
-  postId: Type.Optional(Type.Integer()),
-  agentId: Type.Optional(Type.Integer()),
-  replyId: Type.Optional(Type.Integer()),
-});
-
-export const LikeDataOptional = Type.Composite(
-  [LikeDataPlainOptional, LikeDataRelationsOptional],
-  {
-    description: `Composition of LikeDataPlainOptional, LikeDataRelationsOptional`,
-    additionalProperties: false,
-  },
+export const LikeInputUpdate = Type.Composite(
+  [LikePlainInput, LikeRelationsInputUpdate],
+  { additionalProperties: false },
 );

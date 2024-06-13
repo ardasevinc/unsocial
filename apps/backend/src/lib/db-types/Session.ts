@@ -1,68 +1,150 @@
 import { Type } from "@sinclair/typebox";
 
-import { _Nullable } from "./__nullable__";
+import { Nullable } from "./Nullable";
 
-export const SessionPlain = Type.Object({
-  id: Type.String(),
-  accountId: Type.String(),
-  expiresAt: Type.Date(),
-});
+export const SessionPlain = Type.Object(
+  {
+    id: Type.String({ additionalProperties: false }),
+    accountId: Type.String({ additionalProperties: false }),
+    expiresAt: Type.Date({ additionalProperties: false }),
+  },
+  { additionalProperties: false },
+);
 
-export const SessionRelations = Type.Object({
-  account: Type.Object({
-    id: Type.String(),
-    created: Type.Date(),
-    updated: Type.Date(),
-    agentId: Type.Integer(),
-  }),
-});
+export const SessionRelations = Type.Object(
+  {
+    account: Type.Object(
+      {
+        id: Type.String({ additionalProperties: false }),
+        created: Type.Date({ additionalProperties: false }),
+        updated: Type.Date({ additionalProperties: false }),
+        agentId: Type.Integer({ additionalProperties: false }),
+      },
+      { additionalProperties: false },
+    ),
+  },
+  { additionalProperties: false },
+);
+
+export const SessionPlainInput = Type.Object(
+  { expiresAt: Type.Date({ additionalProperties: false }) },
+  { additionalProperties: false },
+);
+
+export const SessionRelationsInputCreate = Type.Object(
+  {
+    account: Type.Object(
+      {
+        connect: Type.Object(
+          {
+            id: Type.String({ additionalProperties: false }),
+          },
+          { additionalProperties: false },
+        ),
+      },
+      { additionalProperties: false },
+    ),
+  },
+  { additionalProperties: false },
+);
+
+export const SessionRelationsInputUpdate = Type.Partial(
+  Type.Object(
+    {
+      account: Type.Object(
+        {
+          connect: Type.Object(
+            {
+              id: Type.String({ additionalProperties: false }),
+            },
+            { additionalProperties: false },
+          ),
+        },
+        { additionalProperties: false },
+      ),
+    },
+    { additionalProperties: false },
+  ),
+  { additionalProperties: false },
+);
+
+export const SessionWhere = Type.Partial(
+  Type.Recursive(
+    (Self) =>
+      Type.Object(
+        {
+          AND: Type.Union([
+            Self,
+            Type.Array(Self, { additionalProperties: false }),
+          ]),
+          NOT: Type.Union([
+            Self,
+            Type.Array(Self, { additionalProperties: false }),
+          ]),
+          OR: Type.Array(Self, { additionalProperties: false }),
+          id: Type.String({ additionalProperties: false }),
+          accountId: Type.String({ additionalProperties: false }),
+          expiresAt: Type.Date({ additionalProperties: false }),
+        },
+        { additionalProperties: false },
+      ),
+    { $id: "Session" },
+  ),
+  { additionalProperties: false },
+);
+
+export const SessionWhereUnique = Type.Recursive(
+  (Self) =>
+    Type.Intersect(
+      [
+        Type.Partial(
+          Type.Object(
+            { id: Type.String({ additionalProperties: false }) },
+            { additionalProperties: false },
+          ),
+          { additionalProperties: false },
+        ),
+        Type.Union(
+          [Type.Object({ id: Type.String({ additionalProperties: false }) })],
+          { additionalProperties: false },
+        ),
+        Type.Partial(
+          Type.Object({
+            AND: Type.Union([
+              Self,
+              Type.Array(Self, { additionalProperties: false }),
+            ]),
+            NOT: Type.Union([
+              Self,
+              Type.Array(Self, { additionalProperties: false }),
+            ]),
+            OR: Type.Array(Self, { additionalProperties: false }),
+          }),
+          { additionalProperties: false },
+        ),
+        Type.Partial(
+          Type.Object({
+            accountId: Type.String({ additionalProperties: false }),
+            expiresAt: Type.Date({ additionalProperties: false }),
+          }),
+          { additionalProperties: false },
+        ),
+      ],
+      { additionalProperties: false },
+    ),
+  { $id: "Session" },
+);
 
 export const Session = Type.Composite([SessionPlain, SessionRelations], {
-  description: `Composition of SessionPlain, SessionRelations`,
   additionalProperties: false,
 });
 
-export const SessionWhere = Type.Union([
-  Type.Composite([
-    Type.Pick(
-      Type.Required(
-        Type.Composite([Type.Object({}), Type.Pick(SessionPlain, ["id"])]),
-      ),
-      ["id"],
-    ),
-    Type.Omit(
-      Type.Partial(
-        Type.Composite([Type.Object({}), Type.Pick(SessionPlain, ["id"])]),
-      ),
-      ["id"],
-    ),
-  ]),
-]);
-
-export const SessionDataPlain = Type.Object({ expiresAt: Type.Date() });
-
-export const SessionDataRelations = Type.Object({ accountId: Type.String() });
-
-export const SessionData = Type.Composite(
-  [SessionDataPlain, SessionDataRelations],
-  {
-    description: `Composition of SessionDataPlain, SessionDataRelations`,
-    additionalProperties: false,
-  },
+export const SessionInputCreate = Type.Composite(
+  [SessionPlainInput, SessionRelationsInputCreate],
+  { additionalProperties: false },
 );
 
-export const SessionDataPlainOptional = Type.Object({
-  expiresAt: Type.Optional(Type.Date()),
-});
-
-export const SessionDataRelationsOptional = Type.Object({
-  accountId: Type.Optional(Type.String()),
-});
-
-export const SessionDataOptional = Type.Composite(
-  [SessionDataPlainOptional, SessionDataRelationsOptional],
-  {
-    description: `Composition of SessionDataPlainOptional, SessionDataRelationsOptional`,
-    additionalProperties: false,
-  },
+export const SessionInputUpdate = Type.Composite(
+  [SessionPlainInput, SessionRelationsInputUpdate],
+  { additionalProperties: false },
 );

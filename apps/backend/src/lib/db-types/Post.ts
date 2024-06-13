@@ -1,129 +1,378 @@
 import { Type } from "@sinclair/typebox";
 
-import { _Nullable } from "./__nullable__";
+import { Nullable } from "./Nullable";
 
-export const PostPlain = Type.Object({
-  id: Type.Integer(),
-  created: Type.Date(),
-  updated: Type.Date(),
-  content: Type.String(),
-  isRepost: _Nullable(Type.Boolean()),
-  repostCount: _Nullable(Type.Integer()),
-  ownerId: Type.Integer(),
-  simulationId: Type.Integer(),
-});
+export const PostPlain = Type.Object(
+  {
+    id: Type.Integer({ additionalProperties: false }),
+    created: Type.Date({ additionalProperties: false }),
+    updated: Type.Date({ additionalProperties: false }),
+    content: Type.String({ additionalProperties: false }),
+    isRepost: Nullable(Type.Boolean({ additionalProperties: false })),
+    repostCount: Nullable(Type.Integer({ additionalProperties: false })),
+    ownerId: Type.Integer({ additionalProperties: false }),
+    simulationId: Type.Integer({ additionalProperties: false }),
+  },
+  { additionalProperties: false },
+);
 
-export const PostRelations = Type.Object({
-  comments: Type.Array(
-    Type.Object({
-      id: Type.Integer(),
-      created: Type.Date(),
-      updated: Type.Date(),
-      content: Type.String(),
-      repostCount: Type.Integer(),
-      postId: Type.Integer(),
-      authorId: Type.Integer(),
-    }),
+export const PostRelations = Type.Object(
+  {
+    comments: Type.Array(
+      Type.Object(
+        {
+          id: Type.Integer({ additionalProperties: false }),
+          created: Type.Date({ additionalProperties: false }),
+          updated: Type.Date({ additionalProperties: false }),
+          content: Type.String({ additionalProperties: false }),
+          repostCount: Type.Integer({ additionalProperties: false }),
+          postId: Type.Integer({ additionalProperties: false }),
+          authorId: Type.Integer({ additionalProperties: false }),
+        },
+        { additionalProperties: false },
+      ),
+      { additionalProperties: false },
+    ),
+    likes: Type.Array(
+      Type.Object(
+        {
+          id: Type.Integer({ additionalProperties: false }),
+          created: Type.Date({ additionalProperties: false }),
+          updated: Type.Date({ additionalProperties: false }),
+          postId: Type.Integer({ additionalProperties: false }),
+          agentId: Type.Integer({ additionalProperties: false }),
+          replyId: Type.Integer({ additionalProperties: false }),
+        },
+        { additionalProperties: false },
+      ),
+      { additionalProperties: false },
+    ),
+    owner: Type.Object(
+      {
+        id: Type.Integer({ additionalProperties: false }),
+        created: Type.Date({ additionalProperties: false }),
+        updated: Type.Date({ additionalProperties: false }),
+        type: Type.Union([Type.Literal("AI"), Type.Literal("HUMAN")], {
+          additionalProperties: false,
+        }),
+        displayName: Type.String({ additionalProperties: false }),
+        username: Type.String({ additionalProperties: false }),
+        timezone: Type.String({ additionalProperties: false }),
+        prompt: Nullable(Type.String({ additionalProperties: false })),
+        engagementProbability: Nullable(
+          Type.Number({ additionalProperties: false }),
+        ),
+        simulationId: Type.Integer({ additionalProperties: false }),
+        locationId: Nullable(Type.Integer({ additionalProperties: false })),
+      },
+      { additionalProperties: false },
+    ),
+    generation: Nullable(
+      Type.Object(
+        {
+          id: Type.String({ additionalProperties: false }),
+          created: Type.Date({ additionalProperties: false }),
+          model: Type.String({ additionalProperties: false }),
+          simulationId: Type.Integer({ additionalProperties: false }),
+          postId: Nullable(Type.Integer({ additionalProperties: false })),
+          replyId: Type.Integer({ additionalProperties: false }),
+        },
+        { additionalProperties: false },
+      ),
+    ),
+    simulation: Type.Object(
+      {
+        id: Type.Integer({ additionalProperties: false }),
+        created: Type.Date({ additionalProperties: false }),
+        updated: Type.Date({ additionalProperties: false }),
+        end: Type.Date({ additionalProperties: false }),
+        currentTime: Type.Date({ additionalProperties: false }),
+        chaos: Type.Integer({ additionalProperties: false }),
+        simulationStatus: Type.Union(
+          [
+            Type.Literal("CREATED"),
+            Type.Literal("QUEUED"),
+            Type.Literal("RUNNING"),
+            Type.Literal("PAUSED"),
+            Type.Literal("FINISHED"),
+          ],
+          { additionalProperties: false },
+        ),
+      },
+      { additionalProperties: false },
+    ),
+  },
+  { additionalProperties: false },
+);
+
+export const PostPlainInput = Type.Object(
+  {
+    created: Type.Date({ additionalProperties: false }),
+    content: Type.String({ additionalProperties: false }),
+    isRepost: Nullable(Type.Boolean({ additionalProperties: false })),
+    repostCount: Nullable(Type.Integer({ additionalProperties: false })),
+  },
+  { additionalProperties: false },
+);
+
+export const PostRelationsInputCreate = Type.Object(
+  {
+    comments: Type.Optional(
+      Type.Object(
+        {
+          connect: Type.Array(
+            Type.Object(
+              {
+                id: Type.String({ additionalProperties: false }),
+              },
+              { additionalProperties: false },
+            ),
+            { additionalProperties: false },
+          ),
+        },
+        { additionalProperties: false },
+      ),
+    ),
+    likes: Type.Optional(
+      Type.Object(
+        {
+          connect: Type.Array(
+            Type.Object(
+              {
+                id: Type.String({ additionalProperties: false }),
+              },
+              { additionalProperties: false },
+            ),
+            { additionalProperties: false },
+          ),
+        },
+        { additionalProperties: false },
+      ),
+    ),
+    owner: Type.Object(
+      {
+        connect: Type.Object(
+          {
+            id: Type.String({ additionalProperties: false }),
+          },
+          { additionalProperties: false },
+        ),
+      },
+      { additionalProperties: false },
+    ),
+    generation: Type.Optional(
+      Type.Object(
+        {
+          connect: Type.Object(
+            {
+              id: Type.String({ additionalProperties: false }),
+            },
+            { additionalProperties: false },
+          ),
+        },
+        { additionalProperties: false },
+      ),
+    ),
+    simulation: Type.Object(
+      {
+        connect: Type.Object(
+          {
+            id: Type.String({ additionalProperties: false }),
+          },
+          { additionalProperties: false },
+        ),
+      },
+      { additionalProperties: false },
+    ),
+  },
+  { additionalProperties: false },
+);
+
+export const PostRelationsInputUpdate = Type.Partial(
+  Type.Object(
+    {
+      comments: Type.Partial(
+        Type.Object(
+          {
+            connect: Type.Array(
+              Type.Object(
+                {
+                  id: Type.String({ additionalProperties: false }),
+                },
+                { additionalProperties: false },
+              ),
+              { additionalProperties: false },
+            ),
+            disconnect: Type.Array(
+              Type.Object(
+                {
+                  id: Type.String({ additionalProperties: false }),
+                },
+                { additionalProperties: false },
+              ),
+              { additionalProperties: false },
+            ),
+          },
+          { additionalProperties: false },
+        ),
+        { additionalProperties: false },
+      ),
+      likes: Type.Partial(
+        Type.Object(
+          {
+            connect: Type.Array(
+              Type.Object(
+                {
+                  id: Type.String({ additionalProperties: false }),
+                },
+                { additionalProperties: false },
+              ),
+              { additionalProperties: false },
+            ),
+            disconnect: Type.Array(
+              Type.Object(
+                {
+                  id: Type.String({ additionalProperties: false }),
+                },
+                { additionalProperties: false },
+              ),
+              { additionalProperties: false },
+            ),
+          },
+          { additionalProperties: false },
+        ),
+        { additionalProperties: false },
+      ),
+      owner: Type.Object(
+        {
+          connect: Type.Object(
+            {
+              id: Type.String({ additionalProperties: false }),
+            },
+            { additionalProperties: false },
+          ),
+        },
+        { additionalProperties: false },
+      ),
+      generation: Type.Partial(
+        Type.Object(
+          {
+            connect: Type.Object(
+              {
+                id: Type.String({ additionalProperties: false }),
+              },
+              { additionalProperties: false },
+            ),
+            disconnect: Type.Boolean(),
+          },
+          { additionalProperties: false },
+        ),
+        { additionalProperties: false },
+      ),
+      simulation: Type.Object(
+        {
+          connect: Type.Object(
+            {
+              id: Type.String({ additionalProperties: false }),
+            },
+            { additionalProperties: false },
+          ),
+        },
+        { additionalProperties: false },
+      ),
+    },
+    { additionalProperties: false },
   ),
-  likes: Type.Array(
-    Type.Object({
-      id: Type.Integer(),
-      created: Type.Date(),
-      updated: Type.Date(),
-      postId: Type.Integer(),
-      agentId: Type.Integer(),
-      replyId: Type.Integer(),
-    }),
+  { additionalProperties: false },
+);
+
+export const PostWhere = Type.Partial(
+  Type.Recursive(
+    (Self) =>
+      Type.Object(
+        {
+          AND: Type.Union([
+            Self,
+            Type.Array(Self, { additionalProperties: false }),
+          ]),
+          NOT: Type.Union([
+            Self,
+            Type.Array(Self, { additionalProperties: false }),
+          ]),
+          OR: Type.Array(Self, { additionalProperties: false }),
+          id: Type.Integer({ additionalProperties: false }),
+          created: Type.Date({ additionalProperties: false }),
+          updated: Type.Date({ additionalProperties: false }),
+          content: Type.String({ additionalProperties: false }),
+          isRepost: Type.Boolean({ additionalProperties: false }),
+          repostCount: Type.Integer({ additionalProperties: false }),
+          ownerId: Type.Integer({ additionalProperties: false }),
+          simulationId: Type.Integer({ additionalProperties: false }),
+        },
+        { additionalProperties: false },
+      ),
+    { $id: "Post" },
   ),
-  owner: Type.Object({
-    id: Type.Integer(),
-    created: Type.Date(),
-    updated: Type.Date(),
-    displayName: Type.String(),
-    username: Type.String(),
-    timezone: Type.String(),
-    prompt: _Nullable(Type.String()),
-    engagementProbability: _Nullable(Type.Number()),
-    simulationId: Type.Integer(),
-    locationId: _Nullable(Type.Integer()),
-  }),
-  generation: _Nullable(
-    Type.Object({
-      id: Type.String(),
-      created: Type.Date(),
-      model: Type.String(),
-      simulationId: Type.Integer(),
-      postId: _Nullable(Type.Integer()),
-      replyId: Type.Integer(),
-    }),
-  ),
-  simulation: Type.Object({
-    id: Type.Integer(),
-    created: Type.Date(),
-    updated: Type.Date(),
-    end: Type.Date(),
-    currentTime: Type.Date(),
-    chaos: Type.Integer(),
-  }),
-});
+  { additionalProperties: false },
+);
+
+export const PostWhereUnique = Type.Recursive(
+  (Self) =>
+    Type.Intersect(
+      [
+        Type.Partial(
+          Type.Object(
+            { id: Type.Integer({ additionalProperties: false }) },
+            { additionalProperties: false },
+          ),
+          { additionalProperties: false },
+        ),
+        Type.Union(
+          [Type.Object({ id: Type.Integer({ additionalProperties: false }) })],
+          { additionalProperties: false },
+        ),
+        Type.Partial(
+          Type.Object({
+            AND: Type.Union([
+              Self,
+              Type.Array(Self, { additionalProperties: false }),
+            ]),
+            NOT: Type.Union([
+              Self,
+              Type.Array(Self, { additionalProperties: false }),
+            ]),
+            OR: Type.Array(Self, { additionalProperties: false }),
+          }),
+          { additionalProperties: false },
+        ),
+        Type.Partial(
+          Type.Object({
+            created: Type.Date({ additionalProperties: false }),
+            updated: Type.Date({ additionalProperties: false }),
+            content: Type.String({ additionalProperties: false }),
+            isRepost: Type.Boolean({ additionalProperties: false }),
+            repostCount: Type.Integer({ additionalProperties: false }),
+            ownerId: Type.Integer({ additionalProperties: false }),
+            simulationId: Type.Integer({ additionalProperties: false }),
+          }),
+          { additionalProperties: false },
+        ),
+      ],
+      { additionalProperties: false },
+    ),
+  { $id: "Post" },
+);
 
 export const Post = Type.Composite([PostPlain, PostRelations], {
-  description: `Composition of PostPlain, PostRelations`,
   additionalProperties: false,
 });
 
-export const PostWhere = Type.Union([
-  Type.Composite([
-    Type.Pick(
-      Type.Required(
-        Type.Composite([Type.Object({}), Type.Pick(PostPlain, ["id"])]),
-      ),
-      ["id"],
-    ),
-    Type.Omit(
-      Type.Partial(
-        Type.Composite([Type.Object({}), Type.Pick(PostPlain, ["id"])]),
-      ),
-      ["id"],
-    ),
-  ]),
-]);
+export const PostInputCreate = Type.Composite(
+  [PostPlainInput, PostRelationsInputCreate],
+  { additionalProperties: false },
+);
 
-export const PostDataPlain = Type.Object({
-  created: Type.Date(),
-  updated: Type.Date(),
-  content: Type.String(),
-  isRepost: Type.Optional(_Nullable(Type.Boolean())),
-  repostCount: Type.Optional(_Nullable(Type.Integer())),
-});
-
-export const PostDataRelations = Type.Object({
-  ownerId: Type.Integer(),
-  simulationId: Type.Integer(),
-});
-
-export const PostData = Type.Composite([PostDataPlain, PostDataRelations], {
-  description: `Composition of PostDataPlain, PostDataRelations`,
-  additionalProperties: false,
-});
-
-export const PostDataPlainOptional = Type.Object({
-  created: Type.Optional(Type.Date()),
-  updated: Type.Optional(Type.Date()),
-  content: Type.Optional(Type.String()),
-  isRepost: Type.Optional(_Nullable(Type.Boolean())),
-  repostCount: Type.Optional(_Nullable(Type.Integer())),
-});
-
-export const PostDataRelationsOptional = Type.Object({
-  ownerId: Type.Optional(Type.Integer()),
-  simulationId: Type.Optional(Type.Integer()),
-});
-
-export const PostDataOptional = Type.Composite(
-  [PostDataPlainOptional, PostDataRelationsOptional],
-  {
-    description: `Composition of PostDataPlainOptional, PostDataRelationsOptional`,
-    additionalProperties: false,
-  },
+export const PostInputUpdate = Type.Composite(
+  [PostPlainInput, PostRelationsInputUpdate],
+  { additionalProperties: false },
 );

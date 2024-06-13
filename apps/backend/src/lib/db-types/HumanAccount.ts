@@ -1,117 +1,225 @@
 import { Type } from "@sinclair/typebox";
 
-import { _Nullable } from "./__nullable__";
+import { Nullable } from "./Nullable";
 
-export const HumanAccountPlain = Type.Object({
-  id: Type.String(),
-  created: Type.Date(),
-  updated: Type.Date(),
-  agentId: Type.Integer(),
-});
+export const HumanAccountPlain = Type.Object(
+  {
+    id: Type.String({ additionalProperties: false }),
+    created: Type.Date({ additionalProperties: false }),
+    updated: Type.Date({ additionalProperties: false }),
+    agentId: Type.Integer({ additionalProperties: false }),
+  },
+  { additionalProperties: false },
+);
 
-export const HumanAccountRelations = Type.Object({
-  sessions: Type.Array(
-    Type.Object({
-      id: Type.String(),
-      accountId: Type.String(),
-      expiresAt: Type.Date(),
-    }),
+export const HumanAccountRelations = Type.Object(
+  {
+    sessions: Type.Array(
+      Type.Object(
+        {
+          id: Type.String({ additionalProperties: false }),
+          accountId: Type.String({ additionalProperties: false }),
+          expiresAt: Type.Date({ additionalProperties: false }),
+        },
+        { additionalProperties: false },
+      ),
+      { additionalProperties: false },
+    ),
+    agent: Type.Object(
+      {
+        id: Type.Integer({ additionalProperties: false }),
+        created: Type.Date({ additionalProperties: false }),
+        updated: Type.Date({ additionalProperties: false }),
+        type: Type.Union([Type.Literal("AI"), Type.Literal("HUMAN")], {
+          additionalProperties: false,
+        }),
+        displayName: Type.String({ additionalProperties: false }),
+        username: Type.String({ additionalProperties: false }),
+        timezone: Type.String({ additionalProperties: false }),
+        prompt: Nullable(Type.String({ additionalProperties: false })),
+        engagementProbability: Nullable(
+          Type.Number({ additionalProperties: false }),
+        ),
+        simulationId: Type.Integer({ additionalProperties: false }),
+        locationId: Nullable(Type.Integer({ additionalProperties: false })),
+      },
+      { additionalProperties: false },
+    ),
+  },
+  { additionalProperties: false },
+);
+
+export const HumanAccountPlainInput = Type.Object(
+  { created: Type.Date({ additionalProperties: false }) },
+  { additionalProperties: false },
+);
+
+export const HumanAccountRelationsInputCreate = Type.Object(
+  {
+    sessions: Type.Optional(
+      Type.Object(
+        {
+          connect: Type.Array(
+            Type.Object(
+              {
+                id: Type.String({ additionalProperties: false }),
+              },
+              { additionalProperties: false },
+            ),
+            { additionalProperties: false },
+          ),
+        },
+        { additionalProperties: false },
+      ),
+    ),
+    agent: Type.Object(
+      {
+        connect: Type.Object(
+          {
+            id: Type.String({ additionalProperties: false }),
+          },
+          { additionalProperties: false },
+        ),
+      },
+      { additionalProperties: false },
+    ),
+  },
+  { additionalProperties: false },
+);
+
+export const HumanAccountRelationsInputUpdate = Type.Partial(
+  Type.Object(
+    {
+      sessions: Type.Partial(
+        Type.Object(
+          {
+            connect: Type.Array(
+              Type.Object(
+                {
+                  id: Type.String({ additionalProperties: false }),
+                },
+                { additionalProperties: false },
+              ),
+              { additionalProperties: false },
+            ),
+            disconnect: Type.Array(
+              Type.Object(
+                {
+                  id: Type.String({ additionalProperties: false }),
+                },
+                { additionalProperties: false },
+              ),
+              { additionalProperties: false },
+            ),
+          },
+          { additionalProperties: false },
+        ),
+        { additionalProperties: false },
+      ),
+      agent: Type.Object(
+        {
+          connect: Type.Object(
+            {
+              id: Type.String({ additionalProperties: false }),
+            },
+            { additionalProperties: false },
+          ),
+        },
+        { additionalProperties: false },
+      ),
+    },
+    { additionalProperties: false },
   ),
-  agent: Type.Object({
-    id: Type.Integer(),
-    created: Type.Date(),
-    updated: Type.Date(),
-    displayName: Type.String(),
-    username: Type.String(),
-    timezone: Type.String(),
-    prompt: _Nullable(Type.String()),
-    engagementProbability: _Nullable(Type.Number()),
-    simulationId: Type.Integer(),
-    locationId: _Nullable(Type.Integer()),
-  }),
-});
+  { additionalProperties: false },
+);
+
+export const HumanAccountWhere = Type.Partial(
+  Type.Recursive(
+    (Self) =>
+      Type.Object(
+        {
+          AND: Type.Union([
+            Self,
+            Type.Array(Self, { additionalProperties: false }),
+          ]),
+          NOT: Type.Union([
+            Self,
+            Type.Array(Self, { additionalProperties: false }),
+          ]),
+          OR: Type.Array(Self, { additionalProperties: false }),
+          id: Type.String({ additionalProperties: false }),
+          created: Type.Date({ additionalProperties: false }),
+          updated: Type.Date({ additionalProperties: false }),
+          agentId: Type.Integer({ additionalProperties: false }),
+        },
+        { additionalProperties: false },
+      ),
+    { $id: "HumanAccount" },
+  ),
+  { additionalProperties: false },
+);
+
+export const HumanAccountWhereUnique = Type.Recursive(
+  (Self) =>
+    Type.Intersect(
+      [
+        Type.Partial(
+          Type.Object(
+            {
+              id: Type.String({ additionalProperties: false }),
+              agentId: Type.Integer({ additionalProperties: false }),
+            },
+            { additionalProperties: false },
+          ),
+          { additionalProperties: false },
+        ),
+        Type.Union(
+          [
+            Type.Object({ id: Type.String({ additionalProperties: false }) }),
+            Type.Object({
+              agentId: Type.Integer({ additionalProperties: false }),
+            }),
+          ],
+          { additionalProperties: false },
+        ),
+        Type.Partial(
+          Type.Object({
+            AND: Type.Union([
+              Self,
+              Type.Array(Self, { additionalProperties: false }),
+            ]),
+            NOT: Type.Union([
+              Self,
+              Type.Array(Self, { additionalProperties: false }),
+            ]),
+            OR: Type.Array(Self, { additionalProperties: false }),
+          }),
+          { additionalProperties: false },
+        ),
+        Type.Partial(
+          Type.Object({
+            created: Type.Date({ additionalProperties: false }),
+            updated: Type.Date({ additionalProperties: false }),
+          }),
+          { additionalProperties: false },
+        ),
+      ],
+      { additionalProperties: false },
+    ),
+  { $id: "HumanAccount" },
+);
 
 export const HumanAccount = Type.Composite(
   [HumanAccountPlain, HumanAccountRelations],
-  {
-    description: `Composition of HumanAccountPlain, HumanAccountRelations`,
-    additionalProperties: false,
-  },
+  { additionalProperties: false },
 );
 
-export const HumanAccountWhere = Type.Union([
-  Type.Composite([
-    Type.Pick(
-      Type.Required(
-        Type.Composite([
-          Type.Object({}),
-          Type.Pick(HumanAccountPlain, ["id", "agentId"]),
-        ]),
-      ),
-      ["id"],
-    ),
-    Type.Omit(
-      Type.Partial(
-        Type.Composite([
-          Type.Object({}),
-          Type.Pick(HumanAccountPlain, ["id", "agentId"]),
-        ]),
-      ),
-      ["id"],
-    ),
-  ]),
-  Type.Composite([
-    Type.Pick(
-      Type.Required(
-        Type.Composite([
-          Type.Object({}),
-          Type.Pick(HumanAccountPlain, ["id", "agentId"]),
-        ]),
-      ),
-      ["agentId"],
-    ),
-    Type.Omit(
-      Type.Partial(
-        Type.Composite([
-          Type.Object({}),
-          Type.Pick(HumanAccountPlain, ["id", "agentId"]),
-        ]),
-      ),
-      ["agentId"],
-    ),
-  ]),
-]);
-
-export const HumanAccountDataPlain = Type.Object({
-  created: Type.Date(),
-  updated: Type.Date(),
-});
-
-export const HumanAccountDataRelations = Type.Object({
-  agentId: Type.Integer(),
-});
-
-export const HumanAccountData = Type.Composite(
-  [HumanAccountDataPlain, HumanAccountDataRelations],
-  {
-    description: `Composition of HumanAccountDataPlain, HumanAccountDataRelations`,
-    additionalProperties: false,
-  },
+export const HumanAccountInputCreate = Type.Composite(
+  [HumanAccountPlainInput, HumanAccountRelationsInputCreate],
+  { additionalProperties: false },
 );
 
-export const HumanAccountDataPlainOptional = Type.Object({
-  created: Type.Optional(Type.Date()),
-  updated: Type.Optional(Type.Date()),
-});
-
-export const HumanAccountDataRelationsOptional = Type.Object({
-  agentId: Type.Optional(Type.Integer()),
-});
-
-export const HumanAccountDataOptional = Type.Composite(
-  [HumanAccountDataPlainOptional, HumanAccountDataRelationsOptional],
-  {
-    description: `Composition of HumanAccountDataPlainOptional, HumanAccountDataRelationsOptional`,
-    additionalProperties: false,
-  },
+export const HumanAccountInputUpdate = Type.Composite(
+  [HumanAccountPlainInput, HumanAccountRelationsInputUpdate],
+  { additionalProperties: false },
 );

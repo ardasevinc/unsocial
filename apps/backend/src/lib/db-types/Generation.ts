@@ -1,163 +1,303 @@
 import { Type } from "@sinclair/typebox";
 
-import { _Nullable } from "./__nullable__";
+import { Nullable } from "./Nullable";
 
-export const GenerationPlain = Type.Object({
-  id: Type.String(),
-  created: Type.Date(),
-  model: Type.String(),
-  simulationId: Type.Integer(),
-  postId: _Nullable(Type.Integer()),
-  replyId: Type.Integer(),
-});
+export const GenerationPlain = Type.Object(
+  {
+    id: Type.String({ additionalProperties: false }),
+    created: Type.Date({ additionalProperties: false }),
+    model: Type.String({ additionalProperties: false }),
+    simulationId: Type.Integer({ additionalProperties: false }),
+    postId: Nullable(Type.Integer({ additionalProperties: false })),
+    replyId: Type.Integer({ additionalProperties: false }),
+  },
+  { additionalProperties: false },
+);
 
-export const GenerationRelations = Type.Object({
-  usage: _Nullable(
-    Type.Object({
-      id: Type.Integer(),
-      completionTokens: Type.Integer(),
-      promptTokens: Type.Integer(),
-      totalTokens: Type.Integer(),
-      totalCost: Type.Number(),
-      generationId: Type.String(),
-    }),
+export const GenerationRelations = Type.Object(
+  {
+    usage: Nullable(
+      Type.Object(
+        {
+          id: Type.Integer({ additionalProperties: false }),
+          completionTokens: Type.Integer({ additionalProperties: false }),
+          promptTokens: Type.Integer({ additionalProperties: false }),
+          totalTokens: Type.Integer({ additionalProperties: false }),
+          totalCost: Type.Number({ additionalProperties: false }),
+          generationId: Type.String({ additionalProperties: false }),
+        },
+        { additionalProperties: false },
+      ),
+    ),
+    simulation: Type.Object(
+      {
+        id: Type.Integer({ additionalProperties: false }),
+        created: Type.Date({ additionalProperties: false }),
+        updated: Type.Date({ additionalProperties: false }),
+        end: Type.Date({ additionalProperties: false }),
+        currentTime: Type.Date({ additionalProperties: false }),
+        chaos: Type.Integer({ additionalProperties: false }),
+        simulationStatus: Type.Union(
+          [
+            Type.Literal("CREATED"),
+            Type.Literal("QUEUED"),
+            Type.Literal("RUNNING"),
+            Type.Literal("PAUSED"),
+            Type.Literal("FINISHED"),
+          ],
+          { additionalProperties: false },
+        ),
+      },
+      { additionalProperties: false },
+    ),
+    post: Nullable(
+      Type.Object(
+        {
+          id: Type.Integer({ additionalProperties: false }),
+          created: Type.Date({ additionalProperties: false }),
+          updated: Type.Date({ additionalProperties: false }),
+          content: Type.String({ additionalProperties: false }),
+          isRepost: Nullable(Type.Boolean({ additionalProperties: false })),
+          repostCount: Nullable(Type.Integer({ additionalProperties: false })),
+          ownerId: Type.Integer({ additionalProperties: false }),
+          simulationId: Type.Integer({ additionalProperties: false }),
+        },
+        { additionalProperties: false },
+      ),
+    ),
+    reply: Type.Object(
+      {
+        id: Type.Integer({ additionalProperties: false }),
+        created: Type.Date({ additionalProperties: false }),
+        updated: Type.Date({ additionalProperties: false }),
+        content: Type.String({ additionalProperties: false }),
+        repostCount: Type.Integer({ additionalProperties: false }),
+        postId: Type.Integer({ additionalProperties: false }),
+        authorId: Type.Integer({ additionalProperties: false }),
+      },
+      { additionalProperties: false },
+    ),
+  },
+  { additionalProperties: false },
+);
+
+export const GenerationPlainInput = Type.Object(
+  {
+    created: Type.Date({ additionalProperties: false }),
+    model: Type.String({ additionalProperties: false }),
+  },
+  { additionalProperties: false },
+);
+
+export const GenerationRelationsInputCreate = Type.Object(
+  {
+    usage: Type.Optional(
+      Type.Object(
+        {
+          connect: Type.Object(
+            {
+              id: Type.String({ additionalProperties: false }),
+            },
+            { additionalProperties: false },
+          ),
+        },
+        { additionalProperties: false },
+      ),
+    ),
+    simulation: Type.Object(
+      {
+        connect: Type.Object(
+          {
+            id: Type.String({ additionalProperties: false }),
+          },
+          { additionalProperties: false },
+        ),
+      },
+      { additionalProperties: false },
+    ),
+    post: Type.Optional(
+      Type.Object(
+        {
+          connect: Type.Object(
+            {
+              id: Type.String({ additionalProperties: false }),
+            },
+            { additionalProperties: false },
+          ),
+        },
+        { additionalProperties: false },
+      ),
+    ),
+    reply: Type.Object(
+      {
+        connect: Type.Object(
+          {
+            id: Type.String({ additionalProperties: false }),
+          },
+          { additionalProperties: false },
+        ),
+      },
+      { additionalProperties: false },
+    ),
+  },
+  { additionalProperties: false },
+);
+
+export const GenerationRelationsInputUpdate = Type.Partial(
+  Type.Object(
+    {
+      usage: Type.Partial(
+        Type.Object(
+          {
+            connect: Type.Object(
+              {
+                id: Type.String({ additionalProperties: false }),
+              },
+              { additionalProperties: false },
+            ),
+            disconnect: Type.Boolean(),
+          },
+          { additionalProperties: false },
+        ),
+        { additionalProperties: false },
+      ),
+      simulation: Type.Object(
+        {
+          connect: Type.Object(
+            {
+              id: Type.String({ additionalProperties: false }),
+            },
+            { additionalProperties: false },
+          ),
+        },
+        { additionalProperties: false },
+      ),
+      post: Type.Partial(
+        Type.Object(
+          {
+            connect: Type.Object(
+              {
+                id: Type.String({ additionalProperties: false }),
+              },
+              { additionalProperties: false },
+            ),
+            disconnect: Type.Boolean(),
+          },
+          { additionalProperties: false },
+        ),
+        { additionalProperties: false },
+      ),
+      reply: Type.Object(
+        {
+          connect: Type.Object(
+            {
+              id: Type.String({ additionalProperties: false }),
+            },
+            { additionalProperties: false },
+          ),
+        },
+        { additionalProperties: false },
+      ),
+    },
+    { additionalProperties: false },
   ),
-  simulation: Type.Object({
-    id: Type.Integer(),
-    created: Type.Date(),
-    updated: Type.Date(),
-    end: Type.Date(),
-    currentTime: Type.Date(),
-    chaos: Type.Integer(),
-  }),
-  post: _Nullable(
-    Type.Object({
-      id: Type.Integer(),
-      created: Type.Date(),
-      updated: Type.Date(),
-      content: Type.String(),
-      isRepost: _Nullable(Type.Boolean()),
-      repostCount: _Nullable(Type.Integer()),
-      ownerId: Type.Integer(),
-      simulationId: Type.Integer(),
-    }),
+  { additionalProperties: false },
+);
+
+export const GenerationWhere = Type.Partial(
+  Type.Recursive(
+    (Self) =>
+      Type.Object(
+        {
+          AND: Type.Union([
+            Self,
+            Type.Array(Self, { additionalProperties: false }),
+          ]),
+          NOT: Type.Union([
+            Self,
+            Type.Array(Self, { additionalProperties: false }),
+          ]),
+          OR: Type.Array(Self, { additionalProperties: false }),
+          id: Type.String({ additionalProperties: false }),
+          created: Type.Date({ additionalProperties: false }),
+          model: Type.String({ additionalProperties: false }),
+          simulationId: Type.Integer({ additionalProperties: false }),
+          postId: Type.Integer({ additionalProperties: false }),
+          replyId: Type.Integer({ additionalProperties: false }),
+        },
+        { additionalProperties: false },
+      ),
+    { $id: "Generation" },
   ),
-  reply: Type.Object({
-    id: Type.Integer(),
-    created: Type.Date(),
-    updated: Type.Date(),
-    content: Type.String(),
-    repostCount: Type.Integer(),
-    postId: Type.Integer(),
-    authorId: Type.Integer(),
-  }),
-});
+  { additionalProperties: false },
+);
+
+export const GenerationWhereUnique = Type.Recursive(
+  (Self) =>
+    Type.Intersect(
+      [
+        Type.Partial(
+          Type.Object(
+            {
+              id: Type.String({ additionalProperties: false }),
+              postId: Type.Integer({ additionalProperties: false }),
+              replyId: Type.Integer({ additionalProperties: false }),
+            },
+            { additionalProperties: false },
+          ),
+          { additionalProperties: false },
+        ),
+        Type.Union(
+          [
+            Type.Object({ id: Type.String({ additionalProperties: false }) }),
+            Type.Object({
+              postId: Type.Integer({ additionalProperties: false }),
+            }),
+            Type.Object({
+              replyId: Type.Integer({ additionalProperties: false }),
+            }),
+          ],
+          { additionalProperties: false },
+        ),
+        Type.Partial(
+          Type.Object({
+            AND: Type.Union([
+              Self,
+              Type.Array(Self, { additionalProperties: false }),
+            ]),
+            NOT: Type.Union([
+              Self,
+              Type.Array(Self, { additionalProperties: false }),
+            ]),
+            OR: Type.Array(Self, { additionalProperties: false }),
+          }),
+          { additionalProperties: false },
+        ),
+        Type.Partial(
+          Type.Object({
+            created: Type.Date({ additionalProperties: false }),
+            model: Type.String({ additionalProperties: false }),
+            simulationId: Type.Integer({ additionalProperties: false }),
+          }),
+          { additionalProperties: false },
+        ),
+      ],
+      { additionalProperties: false },
+    ),
+  { $id: "Generation" },
+);
 
 export const Generation = Type.Composite(
   [GenerationPlain, GenerationRelations],
-  {
-    description: `Composition of GenerationPlain, GenerationRelations`,
-    additionalProperties: false,
-  },
+  { additionalProperties: false },
 );
 
-export const GenerationWhere = Type.Union([
-  Type.Composite([
-    Type.Pick(
-      Type.Required(
-        Type.Composite([
-          Type.Object({}),
-          Type.Pick(GenerationPlain, ["id", "postId", "replyId"]),
-        ]),
-      ),
-      ["id"],
-    ),
-    Type.Omit(
-      Type.Partial(
-        Type.Composite([
-          Type.Object({}),
-          Type.Pick(GenerationPlain, ["id", "postId", "replyId"]),
-        ]),
-      ),
-      ["id"],
-    ),
-  ]),
-  Type.Composite([
-    Type.Pick(
-      Type.Required(
-        Type.Composite([
-          Type.Object({}),
-          Type.Pick(GenerationPlain, ["id", "postId", "replyId"]),
-        ]),
-      ),
-      ["postId"],
-    ),
-    Type.Omit(
-      Type.Partial(
-        Type.Composite([
-          Type.Object({}),
-          Type.Pick(GenerationPlain, ["id", "postId", "replyId"]),
-        ]),
-      ),
-      ["postId"],
-    ),
-  ]),
-  Type.Composite([
-    Type.Pick(
-      Type.Required(
-        Type.Composite([
-          Type.Object({}),
-          Type.Pick(GenerationPlain, ["id", "postId", "replyId"]),
-        ]),
-      ),
-      ["replyId"],
-    ),
-    Type.Omit(
-      Type.Partial(
-        Type.Composite([
-          Type.Object({}),
-          Type.Pick(GenerationPlain, ["id", "postId", "replyId"]),
-        ]),
-      ),
-      ["replyId"],
-    ),
-  ]),
-]);
-
-export const GenerationDataPlain = Type.Object({
-  created: Type.Date(),
-  model: Type.String(),
-});
-
-export const GenerationDataRelations = Type.Object({
-  simulationId: Type.Integer(),
-  postId: Type.Optional(_Nullable(Type.Integer())),
-  replyId: Type.Integer(),
-});
-
-export const GenerationData = Type.Composite(
-  [GenerationDataPlain, GenerationDataRelations],
-  {
-    description: `Composition of GenerationDataPlain, GenerationDataRelations`,
-    additionalProperties: false,
-  },
+export const GenerationInputCreate = Type.Composite(
+  [GenerationPlainInput, GenerationRelationsInputCreate],
+  { additionalProperties: false },
 );
 
-export const GenerationDataPlainOptional = Type.Object({
-  created: Type.Optional(Type.Date()),
-  model: Type.Optional(Type.String()),
-});
-
-export const GenerationDataRelationsOptional = Type.Object({
-  simulationId: Type.Optional(Type.Integer()),
-  postId: Type.Optional(_Nullable(Type.Integer())),
-  replyId: Type.Optional(Type.Integer()),
-});
-
-export const GenerationDataOptional = Type.Composite(
-  [GenerationDataPlainOptional, GenerationDataRelationsOptional],
-  {
-    description: `Composition of GenerationDataPlainOptional, GenerationDataRelationsOptional`,
-    additionalProperties: false,
-  },
+export const GenerationInputUpdate = Type.Composite(
+  [GenerationPlainInput, GenerationRelationsInputUpdate],
+  { additionalProperties: false },
 );
