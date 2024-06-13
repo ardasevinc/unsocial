@@ -34,11 +34,20 @@ const simulationRoutes: FastifyPluginAsyncTypebox = async function (
   );
 
   fastify.post(
-    '/stop/:id',
+    '/:id/stop',
     { schema: { params: TSimulationIdPath } },
     async function (req, reply) {
       const { id } = req.params;
       return `Stopping simulation with id ${id}`;
+    },
+  );
+
+  fastify.delete(
+    '/:id/remove',
+    { schema: { params: TSimulationIdPath } },
+    async function (req, reply) {
+      const { id } = req.params;
+      return `Removing simulation with id ${id}`;
     },
   );
 
@@ -47,7 +56,23 @@ const simulationRoutes: FastifyPluginAsyncTypebox = async function (
     return simulationList;
   });
 
-  // fastify.get('/:id/stats', {}, async function)
+  fastify.get(
+    '/:id/stats',
+    { schema: { params: TSimulationIdPath } },
+    async function (req, reply) {
+      const { id } = req.params;
+      return `Stats for simulation with id ${id}`;
+    },
+  );
+
+  fastify.get(
+    '/:id/debug',
+    { schema: { params: TSimulationIdPath } },
+    async function (req, reply) {
+      const { id } = req.params;
+      return `DEBUG INFO for simulation with id ${id}`;
+    },
+  );
 };
 
 export default simulationRoutes;
