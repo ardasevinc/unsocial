@@ -1,6 +1,6 @@
-import { Type } from "@sinclair/typebox";
+import { Type } from '@sinclair/typebox';
 
-import { Nullable } from "./Nullable";
+import { Nullable } from './Nullable.js';
 
 export const SimulationPlain = Type.Object(
   {
@@ -13,11 +13,11 @@ export const SimulationPlain = Type.Object(
     seedPrompt: Type.String({ additionalProperties: false }),
     simulationStatus: Type.Union(
       [
-        Type.Literal("CREATED"),
-        Type.Literal("QUEUED"),
-        Type.Literal("RUNNING"),
-        Type.Literal("PAUSED"),
-        Type.Literal("FINISHED"),
+        Type.Literal('CREATED'),
+        Type.Literal('QUEUED'),
+        Type.Literal('RUNNING'),
+        Type.Literal('PAUSED'),
+        Type.Literal('FINISHED'),
       ],
       { additionalProperties: false },
     ),
@@ -47,7 +47,7 @@ export const SimulationRelations = Type.Object(
           id: Type.Integer({ additionalProperties: false }),
           created: Type.Date({ additionalProperties: false }),
           updated: Type.Date({ additionalProperties: false }),
-          type: Type.Union([Type.Literal("AI"), Type.Literal("HUMAN")], {
+          type: Type.Union([Type.Literal('AI'), Type.Literal('HUMAN')], {
             additionalProperties: false,
           }),
           displayName: Type.String({ additionalProperties: false }),
@@ -89,16 +89,16 @@ export const SimulationRelations = Type.Object(
           name: Type.String({ additionalProperties: false }),
           type: Type.Union(
             [
-              Type.Literal("POLITICAL"),
-              Type.Literal("ECONOMIC"),
-              Type.Literal("SOCIAL"),
-              Type.Literal("TECHNOLOGICAL"),
-              Type.Literal("ENVIRONMENTAL"),
-              Type.Literal("ENTERTAINMENT"),
-              Type.Literal("LEGAL"),
-              Type.Literal("GLOBAL"),
-              Type.Literal("SPORTS"),
-              Type.Literal("SCIENCE"),
+              Type.Literal('POLITICAL'),
+              Type.Literal('ECONOMIC'),
+              Type.Literal('SOCIAL'),
+              Type.Literal('TECHNOLOGICAL'),
+              Type.Literal('ENVIRONMENTAL'),
+              Type.Literal('ENTERTAINMENT'),
+              Type.Literal('LEGAL'),
+              Type.Literal('GLOBAL'),
+              Type.Literal('SPORTS'),
+              Type.Literal('SCIENCE'),
             ],
             { additionalProperties: false },
           ),
@@ -124,11 +124,11 @@ export const SimulationPlainInput = Type.Object(
     seedPrompt: Type.String({ additionalProperties: false }),
     simulationStatus: Type.Union(
       [
-        Type.Literal("CREATED"),
-        Type.Literal("QUEUED"),
-        Type.Literal("RUNNING"),
-        Type.Literal("PAUSED"),
-        Type.Literal("FINISHED"),
+        Type.Literal('CREATED'),
+        Type.Literal('QUEUED'),
+        Type.Literal('RUNNING'),
+        Type.Literal('PAUSED'),
+        Type.Literal('FINISHED'),
       ],
       { additionalProperties: false },
     ),
@@ -342,18 +342,18 @@ export const SimulationWhere = Type.Partial(
           seedPrompt: Type.String({ additionalProperties: false }),
           simulationStatus: Type.Union(
             [
-              Type.Literal("CREATED"),
-              Type.Literal("QUEUED"),
-              Type.Literal("RUNNING"),
-              Type.Literal("PAUSED"),
-              Type.Literal("FINISHED"),
+              Type.Literal('CREATED'),
+              Type.Literal('QUEUED'),
+              Type.Literal('RUNNING'),
+              Type.Literal('PAUSED'),
+              Type.Literal('FINISHED'),
             ],
             { additionalProperties: false },
           ),
         },
         { additionalProperties: false },
       ),
-    { $id: "Simulation" },
+    { $id: 'Simulation' },
   ),
   { additionalProperties: false },
 );
@@ -397,11 +397,11 @@ export const SimulationWhereUnique = Type.Recursive(
             seedPrompt: Type.String({ additionalProperties: false }),
             simulationStatus: Type.Union(
               [
-                Type.Literal("CREATED"),
-                Type.Literal("QUEUED"),
-                Type.Literal("RUNNING"),
-                Type.Literal("PAUSED"),
-                Type.Literal("FINISHED"),
+                Type.Literal('CREATED'),
+                Type.Literal('QUEUED'),
+                Type.Literal('RUNNING'),
+                Type.Literal('PAUSED'),
+                Type.Literal('FINISHED'),
               ],
               { additionalProperties: false },
             ),
@@ -411,7 +411,7 @@ export const SimulationWhereUnique = Type.Recursive(
       ],
       { additionalProperties: false },
     ),
-  { $id: "Simulation" },
+  { $id: 'Simulation' },
 );
 
 export const Simulation = Type.Composite(
