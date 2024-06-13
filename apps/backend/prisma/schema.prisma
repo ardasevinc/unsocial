@@ -14,7 +14,8 @@ generator prismabox {
   // you can optionally specify the output location. Defaults to ./prismabox
   output    = "../src/lib/db-types"
   // optionally enable the data model generation. See the data model section below for more info
-  dataModel = true
+  inputModel = true
+  nullableName = "Nullable"
 }
 
 datasource db {
