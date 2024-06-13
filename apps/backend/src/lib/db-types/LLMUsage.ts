@@ -16,6 +16,7 @@ export const LLMUsageRelations = Type.Object({
     id: Type.String(),
     created: Type.Date(),
     model: Type.String(),
+    simulationId: Type.Integer(),
     postId: _Nullable(Type.Integer()),
     replyId: Type.Integer(),
   }),

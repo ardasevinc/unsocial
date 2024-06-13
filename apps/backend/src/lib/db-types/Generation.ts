@@ -6,6 +6,7 @@ export const GenerationPlain = Type.Object({
   id: Type.String(),
   created: Type.Date(),
   model: Type.String(),
+  simulationId: Type.Integer(),
   postId: _Nullable(Type.Integer()),
   replyId: Type.Integer(),
 });
@@ -21,6 +22,14 @@ export const GenerationRelations = Type.Object({
       generationId: Type.String(),
     }),
   ),
+  simulation: Type.Object({
+    id: Type.Integer(),
+    created: Type.Date(),
+    updated: Type.Date(),
+    end: Type.Date(),
+    currentTime: Type.Date(),
+    chaos: Type.Integer(),
+  }),
   post: _Nullable(
     Type.Object({
       id: Type.Integer(),
@@ -121,6 +130,7 @@ export const GenerationDataPlain = Type.Object({
 });
 
 export const GenerationDataRelations = Type.Object({
+  simulationId: Type.Integer(),
   postId: Type.Optional(_Nullable(Type.Integer())),
   replyId: Type.Integer(),
 });
@@ -139,6 +149,7 @@ export const GenerationDataPlainOptional = Type.Object({
 });
 
 export const GenerationDataRelationsOptional = Type.Object({
+  simulationId: Type.Optional(Type.Integer()),
   postId: Type.Optional(_Nullable(Type.Integer())),
   replyId: Type.Optional(Type.Integer()),
 });

@@ -19,6 +19,16 @@ export const SimulationRelations = Type.Object({
     Type.Literal("PAUSED"),
     Type.Literal("FINISHED"),
   ]),
+  generations: Type.Array(
+    Type.Object({
+      id: Type.String(),
+      created: Type.Date(),
+      model: Type.String(),
+      simulationId: Type.Integer(),
+      postId: _Nullable(Type.Integer()),
+      replyId: Type.Integer(),
+    }),
+  ),
   agents: Type.Array(
     Type.Object({
       id: Type.Integer(),
