@@ -8,4 +8,10 @@ enum ValidationError {
   ERROR_RESPONSE_VALIDATION_ERROR = 'error_response_validation_error',
 }
 
-export { Nullable, ValidationError };
+enum SubprocessErrors {
+  ENV_NOT_VALID = 'env_invalid',
+  NO_PARENT_PROCESS = 'no_parent_process',
+  SUBPROCESS_SIGTERM = 'subprocess_sigterm',
+}
+
+export { Nullable, ValidationError, SubprocessErrors };
