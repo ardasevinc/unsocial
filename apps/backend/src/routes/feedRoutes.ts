@@ -10,7 +10,8 @@ const feedRoutes: FastifyPluginAsyncTypebox = async function (fastify, _opts) {
       },
     },
     async function (req, reply) {
-      return { received: true };
+      const { sort, limit, agent_type } = req.query;
+      return { sort, limit, agent_type };
     },
   );
 };

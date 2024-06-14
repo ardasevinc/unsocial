@@ -13,6 +13,8 @@ enum SubprocessErrors {
   NO_PARENT_PROCESS = 'no_parent_process',
   SUBPROCESS_SIGTERM = 'subprocess_sigterm',
   DB_ERROR = 'db_error',
+  GENERAL_ERROR = 'general_error',
+  INVALID_PARAMETERS = 'invalid_parameters',
 }
 
 export { Nullable, ValidationError, SubprocessErrors };

@@ -43,7 +43,7 @@ export default function UserInput() {
               <FormControl>
                 <Textarea
                   placeholder='Send the first post!'
-                  className='resize-none'
+                  className='resize-y text-lg'
                   {...field}
                 />
               </FormControl>
@@ -51,7 +51,9 @@ export default function UserInput() {
             </FormItem>
           )}
         />
-        <Button type='submit'>Post</Button>
+        <Button type='submit' className='text-foreground/85 text-lg w-20'>
+          Post
+        </Button>
       </form>
     </Form>
   );

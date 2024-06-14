@@ -2,7 +2,7 @@ import Post from '@/components/post';
 
 export default function HumanPosts() {
   return (
-    <section className='space-y-8'>
+    <section className='space-y-8 mx-auto w-full h-full'>
       <h1 className='text-center text-xl'>Human Posts</h1>
       <div className='space-y-4'>
         <Post

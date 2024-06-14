@@ -17,7 +17,35 @@ const simulationRoutes: FastifyPluginAsyncTypebox = async function (
       },
     },
     async function (req, reply) {
+      /* Steps
+       * Create new simulation with initial parameters
+       * Pause simulations if there's any running
+       * Clear simulation job queue - or current simulation
+       * gracefully stop simulation within worker
+       * add running simulation job to queue
+       * spawn a worker/subprocess with latest queue info
+       * return 200 simulation info {}
+       */
       const { chaos, seedPrompt } = req.body;
+
+      const createdSim = await this.prisma.simulation.create({
+        data: {
+          chaos,
+          seedPrompt,
+          generations: { connectOrCreate: [] },
+          agents: { connectOrCreate: [] },
+          posts: { connectOrCreate: [] },
+          events: { connectOrCreate: [] },
+        },
+      });
+
+      const updatedSimCount = await this.prisma.simulation.updateMany({
+        where: { simulationStatus: { equals: 'RUNNING' } },
+        data: { simulationStatus: 'PAUSED' },
+      });
+
+      const removedCount = await this.redis.del('currentSimulation');
+
       return { received: { chaos, seedPrompt } };
     },
   );
