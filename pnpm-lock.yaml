@@ -53,6 +53,9 @@ importers:
       fastify-plugin:
         specifier: ^4.5.1
         version: 4.5.1
+      ioredis:
+        specifier: ^5.4.1
+        version: 5.4.1
       lucia:
         specifier: ^3.2.0
         version: 3.2.0
