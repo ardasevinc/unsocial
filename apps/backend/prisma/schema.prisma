@@ -28,8 +28,8 @@ model Simulation {
   id               Int               @id @default(autoincrement())
   created          DateTime          @default(now())
   updated          DateTime          @updatedAt
-  end              DateTime          @map("simulation_end")
-  currentTime      DateTime          @map("current_time")
+  end              DateTime?          @map("simulation_end")
+  currentTime      DateTime?          @map("current_time")
   chaos            Int
   seedPrompt       String            @map("seed_prompt")
   simulationStatus SimulationStatus  @default(CREATED) @map("simulation_status")

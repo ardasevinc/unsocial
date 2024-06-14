@@ -85,8 +85,8 @@ export const PostRelations = Type.Object(
         id: Type.Integer({ additionalProperties: false }),
         created: Type.Date({ additionalProperties: false }),
         updated: Type.Date({ additionalProperties: false }),
-        end: Type.Date({ additionalProperties: false }),
-        currentTime: Type.Date({ additionalProperties: false }),
+        end: Nullable(Type.Date({ additionalProperties: false })),
+        currentTime: Nullable(Type.Date({ additionalProperties: false })),
         chaos: Type.Integer({ additionalProperties: false }),
         seedPrompt: Type.String({ additionalProperties: false }),
         simulationStatus: Type.Union(
